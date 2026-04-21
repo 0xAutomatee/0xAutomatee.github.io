@@ -1,0 +1,576 @@
+Free Interview Questions PDF from http://www.questpond.com
+.NET Interview questions
+
+Basic .NET Framework
+
+What is a IL?
+Twist :- What is MSIL or CIL , What is JIT?
+What is a CLR?
+What is a CTS?
+What is a CLS(Common Language Specification)?
+What is a Managed Code?
+What is a Assembly ?
+What are different types of Assembly?
+What is NameSpace?
+What is Difference between NameSpace and Assembly?
+If you want to view a Assembly how to you go about it ?
+Twist : What is ILDASM ?
+What is Manifest?
+Where is version information stored of a assembly ?
+Is versioning applicable to private assemblies?
+What is GAC ?
+Twist :- What are situations when you register .NET assembly in GAC ?
+What is concept of strong names ?
+Twist :- How do we generate strong names or what is the process of
+generating strong names , What is use of SN.EXE , How do we apply
+strong names to assembly ? , How do you sign an assembly ?
+How to add and remove a assembly from GAC?
+What is Delay signing ?
+What is garbage collection?
+Can we force garbage collector to run ?
+What is reflection?
+What are different type of JIT ?
+What are Value types and Reference types ?
+What is concept of Boxing and Unboxing ?
+What's difference between VB.NET and C# ?
+What's difference between System exceptions and Application
+exceptions?
+What is CODE Access security?
+What is a satellite assembly?
+How to prevent my .NET DLL to be decompiled?
+What's the difference between Convert.toString and .toString()
+method ?
+What is Native Image Generator (Ngen.exe)?
+We have two version of the same assembly in GAC? I want my client to
+make choice of
+which assembly to choose?
+What is CodeDom?
+
+.NET Interoperability
+
+How can we use COM Components in .NET?
+Twist : What is RCW ?
+Once i have developed the COM wrapper do i have to still register the
+COM in registry?
+How can we use .NET components in COM?
+Twist :- What is CCW (COM callable wrapper) ?, What caution needs to
+be taken in order that .NET components is compatible with COM ?
+How can we make Windows API calls in .NET?
+When we use windows API in .NET is it managed or unmanaged code ?
+What is COM ?
+What is Reference counting in COM ?
+Can you describe IUKNOWN interface in short ?
+Can you explain what is DCOM ?
+How do we create DCOM object in VB6?
+How to implement DTC in .NET ?
+How many types of Transactions are there in COM + .NET ?
+How do you do object pooling in .NET ?
+What are types of compatibility in VB6?
+What is equivalent for regsvr32 exe in .NET ?
+
+Threading
+
+What is Multi-tasking ?
+What is Multi-threading ?
+What is a Thread ?
+Did VB6 support multi-threading ?
+Can we have multiple threads in one App domain ?
+Which namespace has threading ?
+Can you explain in brief how can we implement threading ?
+How can we change priority and what the levels of priority are
+provided by .NET ?
+What does Addressof operator do in background ?
+How can you reference current thread of the method ?
+What's Thread.Sleep() in threading ?
+How can we make a thread sleep for infinite period ?
+What is Suspend and Resume in Threading ?
+What the way to stop a long running thread ?
+How do i debug thread ?
+What's Thread.Join() in threading ?
+What are Daemon thread's and how can a thread be created as Daemon?
+When working with shared data in threading how do you implement
+synchronization ?
+Can we use events with threading ?
+How can we know a state of a thread?
+What is a monitor object?
+What are wait handles ?
+Twist :- What is a mutex object ?
+what is ManualResetEvent and AutoResetEvent ?
+What is ReaderWriter Locks ?
+How can you avoid deadlock in threading ?
+What's difference between thread and process?
+
+Remoting and Webservices
+
+What is a application domain?
+What is .NET Remoting ?
+Which class does the remote object has to inherit ?
+What are two different types of remote object creation mode in .NET ?
+Describe in detail Basic of SAO architecture of Remoting?
+What are the situations you will use singleton architecture in
+remoting ?
+What is fundamental of published or precreated objects in Remoting ?
+What are the ways client can create object on server in CAO model ?
+Are CAO stateful in nature ?
+In CAO model when we want client objects to be created by "NEW"
+keyword is there
+any precautions to be taken ?
+Is it a good design practice to distribute the implementation to
+Remoting Client ?
+What is LeaseTime,SponsorshipTime ,RenewonCallTime and
+LeaseManagerPollTime?
+Which config file has all the supported channels/protocol ?
+How can you specify remoting parameters using Config files ?
+Can Non-Default constructors be used with Single Call SAO?
+Twist :- What are the limitation of constructors for Single call SAO ?
+How can we call methods in remoting Asynchronously ?
+What is Asynchronous One-Way Calls ?
+What is marshalling and what are different kinds of marshalling ?
+What is ObjRef object in remoting ?
+What is a WebService ?
+What is UDDI ?
+What is DISCO ?
+What is WSDL?
+What the different phase/steps of acquiring a proxy object in
+Webservice ?
+What is file extension of Webservices ?
+Which attribute is used in order that the method can be used as
+WebService ?
+What are the steps to create a webservice and consume it ?
+Do webservice have state ?
+
+Caching Concepts
+
+What is application object ?
+What's the difference between Cache object and application object ?
+How can get access to cache object ?
+What are dependencies in cache and types of dependencies ?
+Can you show a simple code showing file dependency in cache ?
+What is Cache Callback in Cache ?
+What is scavenging ?
+What are different types of caching using cache object of ASP.NET?
+How can you cache different version of same page using ASP.NET cache
+object ?
+How will implement Page Fragment Caching ?
+What are ASP.NET session and compare ASP.NET session with classic ASP
+session variables?
+Which various modes of storing ASP.NET session ?
+Is Session_End event supported in all session modes ?
+What are the precautions you will take in order that StateServer Mode
+work properly ?
+What are the precautions you will take in order that SQLSERVER Mode
+work properly ?
+Where do you specify session state mode in ASP.NET ?
+What are the other ways you can maintain state ?
+What are benefits and Limitation of using Hidden fields ?
+What is ViewState ?
+Do performance vary for viewstate according to User controls ?
+What are benefits and Limitation of using Viewstate for state
+management?
+How an you use Hidden frames to cache client data ?
+What are benefits and Limitation of using Hidden frames?
+What are benefits and Limitation of using Cookies?
+What is Query String and What are benefits and Limitation of using
+Query Strings?
+
+OOPS
+
+What is Object Oriented Programming ?
+What's a Class ?
+What's a Object ?
+What's the relation between Classes and Objects ?
+What are different properties provided by Object-oriented systems ?
+Twist :- Can you explain different properties of Object Oriented
+Systems?
+Twist :- What's difference between Association , Aggregation and
+Inheritance relationships?
+How can we acheive inheritance in VB.NET ?
+What are abstract classes ?
+What's a Interface ?
+What is difference between abstract classes and interfaces?
+What is a delegate ?
+What are event's ?
+Do events have return type ?
+Can event's have access modifiers ?
+Can we have shared events ?
+What is shadowing ?
+What's difference between Shadowing and Overriding ?
+What's difference between delegate and events?
+If we inherit a class do the private variables also get inherited ?
+What are different accessibility levels defined in .NET ?
+Can you prevent a class from overriding ?
+What's the use of "MustInherit" keyword in VB.NET ?
+Why can not you specify accessibility modifier in Interface ?
+What are similarities between Class and structure ?
+What's the difference between Class and structure's ?
+What does virtual keyword mean ?
+What are shared (VB.NET)/Static(C#) variables?
+What is Dispose method in .NET ?
+Whats the use of "OverRides" and "Overridable" keywords ?
+Where are all .NET Collection classes located ?
+What is ArrayList ?
+What's a HashTable ?
+Twist :- What's difference between HashTable and ArrayList ?
+What are queues and stacks ?
+What is ENUM ?
+What is nested Classes ?
+What's Operator Overloading in .NET?
+In below sample code if we create a object of class2 which constructor
+will fire first ?
+What's the significance of Finalize method in .NET?
+Why is it preferred to not use finalize for clean up?
+How can we suppress a finalize method?
+What's the use of DISPOSE method?
+How do I force the Dispose method to be called automatically, as
+clients can forget to call Dispose method?
+In what instances you will declare a constructor to be private?
+Can we have different access modifiers on get/set methods of a
+property ?
+If we write a goto or a return statement in try and catch block will
+the finally block execute ?
+What is Indexer ?
+Can we have static indexer in C# ?
+In a program there are multiple catch blocks so can it happen that two
+catch blocks are executed ?
+What is the difference between System.String and System.StringBuilder
+classes?
+
+ASP.NET
+
+What's the sequence in which ASP.NET events are processed ?
+In which event are the controls fully loaded ?
+How can we identify that the Page is PostBack ?
+How does ASP.NET maintain state in between subsequent request ?
+What is event bubbling ?
+How do we assign page specific attributes ?
+Administrator wants to make a security check that no one has tampered
+with ViewState , how can he ensure this ?
+What's the use of @ Register directives ?
+What's the use of SmartNavigation property ?
+What is AppSetting Section in "Web.Config" file ?
+Where is ViewState information stored ?
+What's the use of @ OutputCache directive in ASP.NET?
+How can we create custom controls in ASP.NET ?
+How many types of validation controls are provided by ASP.NET ?
+Can you explain what is "AutoPostBack" feature in ASP.NET ?
+How can you enable automatic paging in DataGrid ?
+What's the use of "GLOBAL.ASAX" file ?
+What's the difference between "Web.config" and "Machine.Config" ?
+What's a SESSION and APPLICATION object ?
+What's difference between Server.Transfer and response.Redirect ?
+What's difference between Authentication and authorization?
+What is impersonation in ASP.NET ?
+Can you explain in brief how the ASP.NET authentication process works?
+What are the various ways of authentication techniques in ASP.NET?
+How does authorization work in ASP.NET?
+What's difference between Datagrid , Datalist and repeater ?
+From performance point of view how do they rate ?
+What's the method to customize columns in DataGrid?
+How can we format data inside DataGrid?
+How will decide the design consideration to take a Datagrid , datalist
+or repeater ?
+Difference between ASP and ASP.NET?
+What are major events in GLOBAL.ASAX file ?
+What order they are triggered ?
+Do session use cookies ?
+How can we force all the validation control to run ?
+How can we check if all the validation control are valid and proper ?
+If you have client side validation is enabled in your Web page , Does
+that mean server side code is not run?
+Which JavaScript file is referenced for validating the validators at
+the client side ?
+How to disable client side script in validators?
+I want to show the entire validation error message in a message box on
+the client side?
+You find that one of your validation is very complicated and does not
+fit in any of the validators , so what will you do ?
+What is Tracing in ASP.NET ?
+How do we enable tracing ?
+What exactly happens when ASPX page is requested from Browser?
+How can we kill a user session ?
+How do you upload a file in ASP.NET ?
+How do I send email message from ASP.NET ?
+What are different IIS isolation levels?
+ASP used STA threading model , whats the threading model used for
+ASP.NET ?
+Whats the use of <%@ page aspcompat=true %> attribute ?
+Explain the differences between Server-side and Client-side code?
+Can you explain Forms authentication in detail ?
+How do I sign out in forms authentication ?
+If cookies are not enabled at browser end does form Authentication
+work?
+How to use a checkbox in a datagrid?
+What are the steps to create a windows service in VB.NET ?
+What's the difference between "Web farms" and "Web garden"?
+How do we configure "WebGarden"?
+What is the main difference between Gridlayout and FlowLayout ?
+
+.NET Architecture
+
+What are design patterns ?
+What's difference between Factory and Abstract Factory Pattern's?
+What's MVC pattern?
+Twist: - How can you implement MVC pattern in ASP.NET?
+How can we implement singleton pattern in .NET?
+How do you implement prototype pattern in .NET?
+Twist: - How to implement cloning in .NET ? , What is shallow copy and
+deep copy ?
+What are the situations you will use a Web Service and Remoting in
+projects?
+Can you give a practical implementation of FAÇADE patterns?
+How can we implement observer pattern in .NET?
+What is three tier architecture?
+Have you ever worked with Microsoft Application Blocks, if yes then
+which?
+What is Service Oriented architecture?
+What are different ways you can pass data between tiers?
+What is Windows DNA architecture?
+What is aspect oriented programming?
+
+ADO.NET
+
+What is the namespace in which .NET has the data functionality
+classes ?
+Can you give a overview of ADO.NET architecture ?
+What are the two fundamental objects in ADO.NET ?
+What is difference between dataset and datareader ?
+What are major difference between classic ADO and ADO.NET ?
+What is the use of connection object ?
+What is the use of command objects and what are the methods provided
+by the command object ?
+What is the use of dataadapter ?
+What are basic methods of Dataadapter ?
+What is Dataset object?
+What are the various objects in Dataset ?
+How can we connect to Microsoft Access , Foxpro , Oracle etc ?
+How do we connect to SQL SERVER , which namespace do we use ?
+How do we use stored procedure in ADO.NET and how do we provide
+parameters to the stored procedures?
+How can we force the connection object to close after my datareader is
+closed ?
+I want to force the datareader to return only schema of the datastore
+rather than data ?
+How can we fine tune the command object when we are expecting a single
+row or a single value ?
+Which is the best place to store connectionstring in .NET projects ?
+What are steps involved to fill a dataset ?
+Twist :- How can we use dataadapter to fill a dataset ?
+What are the various methods provided by the dataset object to
+generate XML?
+How can we save all data from dataset ?
+How can we check that some changes have been made to dataset since it
+was loaded ?
+Twist :- How can we cancel all changes done in dataset ? , How do we
+get values which are changed in a dataset ?
+How can we add/remove row's in "DataTable" object of "DataSet" ?
+What's basic use of "DataView" ?
+What's difference between "DataSet" and "DataReader" ?
+Twist :- Why is DataSet slower than DataReader ?
+How can we load multiple tables in a DataSet ?
+How can we add relation's between table in a DataSet ?
+What's the use of CommandBuilder ?
+What's difference between "Optimistic" and "Pessimistic" locking ?
+How many way's are there to implement locking in ADO.NET ?
+How can we perform transactions in .NET?
+What's difference between Dataset. clone and Dataset. copy ?
+Can you explain the difference between an ADO.NET Dataset and an ADO
+Recordset?
+Explain in detail the fundamental of connection pooling?
+What is Maximum Pool Size in ADO.NET Connection String?
+How to enable and disable connection pooling?
+
+SQL SERVER
+
+What is normalization? What are different type of normalization?
+What is denormalization ?
+What is a candidate key ?
+What are different types of joins and whats the difference between
+them ?
+What are indexes and What is the difference between clustered and
+nonclustered indexes?
+How can you increase SQL performance ?
+What is the use of OLAP ?
+What's a measure in OLAP ?
+What are dimensions in OLAP ?
+What are levels in dimensions ?
+What are fact tables and dimension tables in OLAP ?
+Twist :- can you explain the star schema for OLAP ?
+What is DTS?
+What is fillfactor ?
+Twist :- When does plage split occurs ?
+What is RAID and how does it work ?
+What's the difference between DELETE TABLE and TRUNCATE TABLE
+commands?
+What are the problems that can occur if you do not implement locking
+properly in SQL SERVER ?
+What are different transaction levels in SQL SERVER ?
+Twist :- what are different types of locks in SQL SERVER ?
+What are different locks in SQL SERVER ?
+Can we suggest locking hints to SQL SERVER ?
+What is LOCK escalation?
+What are the different ways of moving data/databases between servers
+and databases in SQL Server?
+What are advantages of SQL 2000 over SQl 7.0 ?
+What is the difference between a HAVING CLAUSE and a WHERE CLAUSE?
+What is difference between UNION and UNION ALL SQL syntax ?
+How can you raise custom errors from stored procedure ?
+What is ACID fundamental and what are transactions in SQL SERVER ?
+What is DBCC?
+What is purpose of Replication ?
+What are different type of replication supported by SQL SERVER ?
+What is BCP utility in SQL SERVER ?
+What are different types of triggers in SQl SERVER 2000 ?
+If we have multiple AFTER Triggers on table how can we define the
+sequence of the triggers ?
+What is SQl injection ?
+What's the difference between Stored Procedure (SP) and User Defined
+Function (UDF)?
+
+UML
+
+What is UML?
+How many types of diagrams are there in UML ?
+Twist :- Explain in short all types of diagrams in UML ?
+What are advantages of using UML?
+Twist: - What is Modeling and why UML ?
+What's the sequence of UML diagrams in project?
+Twist: - How did you implement UML in your project?
+Just a small Twist: - Do I need all UML diagrams in a project?
+Give a small brief explanation of all Elements in activity diagrams?
+Explain Different elements of a collaboration diagram ?
+Explain Component diagrams ?
+Explain all parts of a deployment diagram?
+Describe various components in sequence diagrams?
+What are the element in State Chart diagrams ?
+Describe different elements in Static Chart diagrams ?
+Explain different elements of a Use Case ?
+Twist: - What's difference between Activity and sequence diagrams?(I
+leave this to the readers)
+
+Project Management
+
+What is project management?
+Is spending in IT project's constant through out the project?
+Who is a stakeholder ?
+Can you explain project life cycle ?
+Twist :- How many phases are there in software project ?
+Are risk constant through out the project ?
+Can you explain different software development life cycles ?
+What is triple constraint triangle in project management ?
+What is a project baselines ?
+What is effort variance?
+How is normally a project management plan document organized ?
+How do you estimate a project?
+What is CAR (Causal Analysis and Resolution)?
+What is DAR (Decision Analysis and Resolution)?
+What is a fish bone diagram ?
+Twist:- What is Ishikawa diagram ?
+What is pareto principle ?
+Twist :- What is 80/20 principle ?
+How do you handle change request?
+What is internal change request?
+What is difference between SITP and UTP in testing ?
+What are the software you have used for project management?
+What are the metrics followed in project management?
+Twist: - What metrics will you look at in order to see the project is
+moving successfully?
+You have people in your team who do not meet there deadlines or do not
+perform what are the actions you will take ?
+Twist :- Two of your resources have conflict's between them how would
+you sort it out ?
+What is black box testing and White box testing?
+What's the difference between Unit Testing, Assembly Testing and
+Regression testing?
+What is V model in testing?
+How do you start a project?
+How did you do resource allocations?
+How do you do code reviews ?
+What is CMMI?
+What are the five levels in CMMI?
+What is continuous and staged representation?
+Can you explain the process areas?
+What is SIX sigma?
+What is DMAIC and DMADV ?
+What are the various roles in Six Sigma implementation?
+What are function points?
+Twist: - Define Elementary process in FPA?
+What are different types of elementary process in FPA?
+What are the different elements in Functions points?
+Can you explain in GSC and VAF in function points?
+What are unadjusted function points and how is it calculated?
+Can you explain steps in function points?
+What is the FP per day in your current company?
+Twist :- What is your company's productivity factor ?
+Do you know Use Case points?
+What is COCOMO I, COCOMOII and COCOMOIII?
+What is SMC approach of estimation?
+How do you estimate maintenance project and change requests?
+
+XML
+
+What is XML?
+What is the version information in XML?
+What is ROOT element in XML?
+If XML does not have closing tag will it work?
+Is XML case sensitive?
+What's the difference between XML and HTML?
+Is XML meant to replace HTML?
+Can you explain why your project needed XML?
+What is DTD (Document Type definition)?
+What is well formed XML?
+What is a valid XML?
+What is CDATA section in XML?
+What is CSS?
+What is XSL?
+What is Element and attributes in XML?
+Which are the namespaces in .NET used for XML?
+What are the standard ways of parsing XML document?
+In What scenarios will you use a DOM parser and SAX parser?
+How was XML handled during COM times?
+What's the main difference between MSML and .NET Framework XML
+classes?
+What are the core functionalities in XML .NET framework? Can you
+explain in detail
+those functionalities?
+What is XSLT?
+Define XPATH?
+What's the concept of XPOINTER?
+What is an XMLReader Class?
+What is XMLTextReader?
+How do we access attributes using "XmlReader"?
+Explain simple Walk through of XmlReader ?
+What does XmlValidatingReader class do?
+
+Localization/Globalization
+
+What is Unicode and why was it introduced?
+Does .NET support UNICODE and how do you know it supports?
+What's the difference between localization and globalization?
+What architecture decisions you should consider while planning for
+international software's?
+How do we get the current culture of the environment in windows and
+ASP.NET?
+Which are the important namespaces during localization and
+globalization?
+What are resource files and how do we generate resource files?
+Can resource file be in any other format other than resx extensions?
+How is resource files actually used in project?
+How can we use Culture Auto in project?
+What are satellite assemblies?
+How do we generate Satellite assemblies?
+What is AL.EXE and RESGEN.EXE?
+What's the use of resource manager class?
+What precautions do we need to take while deploying satellite
+assemblies?
+Can we get a strongly typed resource class rather than using resource
+manager?
+Explain fundamentals of "GetGlobalResourceObject" and
+"GetLocalResourceObject" functions?
+Can we sign a satellite assembly?
+Can you explain collation sequence in sql server?
+How do we define collation sequence for database and tables?
+Can we change the order in a select query with a specified collation
+sequence?
+What are the best practices to be followed while implementing
+globalization and localization?
+Why is the culture set to the current thread?
