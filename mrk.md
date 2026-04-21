@@ -1,6 +1,6 @@
 Course Content
 SQL Server Interview Questions & Answers :-
- 'Question 1 :- Explain normalization ?
+ <br>Question 1 :- Explain normalization ?
  'Question 2 :- How to implement normalization ?
  Question 3 :- What is denormalization ?
  Question 4 :- Explain OLTP vs OLAP ?
