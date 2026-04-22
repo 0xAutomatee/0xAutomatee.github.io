@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL Query Builder</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --panel-2: #1f232c;
+    --border: #2a2f3a;
+    --text: #e4e6eb;
+    --muted: #8b92a5;
+    --accent: #d4af5f;
+    --accent-dim: #8f7840;
+    --accent-soft: rgba(212, 175, 95, 0.08);
+    --keyword: #c587d9;
+    --func: #6fb8e4;
+    --string: #e4c07a;
+    --code-bg: #0b0d11;
+    --danger: #e57373;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    min-height: 100vh;
+  }
+
+  .app {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+  }
+
+  header h1 {
+    margin: 0 0 4px;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+  }
+
+  header p {
+    margin: 0 0 24px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+
+  .clause {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+
+  .clause-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .clause-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  .head-tools {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    align-items: center;
+  }
+
+  .row:last-child { margin-bottom: 0; }
+
+  input, select {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 7px 10px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-family: inherit;
+    flex: 1;
+    min-width: 0;
+  }
+
+  input:focus, select:focus {
+    outline: none;
+    border-color: var(--accent-dim);
+  }
+
+  input::placeholder { color: var(--muted); opacity: 0.55; }
+
+  button {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color 0.15s, background 0.15s;
+  }
+
+  button:hover {
+    background: var(--panel-2);
+    border-color: var(--accent-dim);
+  }
+
+  .btn-add {
+    color: var(--accent);
+    border-color: var(--accent-dim);
+  }
+
+  .btn-add:hover { background: var(--accent-soft); }
+
+  .btn-remove {
+    flex: 0 0 auto;
+    padding: 6px 9px;
+    color: var(--muted);
+  }
+
+  .btn-remove:hover {
+    color: var(--danger);
+    border-color: #7a3b3b;
+  }
+
+  .w-sm { flex: 0 0 110px; }
+  .w-md { flex: 0 0 150px; }
+  .narrow { max-width: 120px; }
+
+  .inline-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--muted);
+    cursor: pointer;
+    user-select: none;
+  }
+  .inline-check input { flex: 0; width: auto; }
+
+  .logic-toggle {
+    display: inline-flex;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .logic-toggle button {
+    border: none;
+    border-radius: 0;
+    padding: 5px 12px;
+    font-size: 11px;
+  }
+  .logic-toggle button.active {
+    background: var(--accent-dim);
+    color: #fff;
+  }
+
+  .empty {
+    color: var(--muted);
+    font-size: 12px;
+    font-style: italic;
+    padding: 2px 2px 2px 0;
+  }
+
+  /* Output panel */
+  .output { position: sticky; top: 20px; align-self: start; }
+
+  .output-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .output-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin: 0;
+    font-family: 'SF Mono', 'Monaco', Consolas, monospace;
+    font-size: 13px;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: var(--text);
+    min-height: 140px;
+  }
+
+  .kw { color: var(--keyword); font-weight: 600; }
+  .fn { color: var(--func); }
+  .str { color: var(--string); }
+
+  .actions { display: flex; gap: 8px; margin-top: 12px; }
+
+  .hint {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 10px;
+    line-height: 1.5;
+  }
+
+  .copy-btn.copied { color: var(--accent); border-color: var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header>
+    <h1>SQL Query Builder</h1>
+    <p>Pick a function, type the column, add an alias — the query writes itself.</p>
+  </header>
+
+  <div class="layout">
+    <!-- ─── LEFT: CLAUSE BUILDERS ─────────────────────────────── -->
+    <div>
+      <section class="clause">
+        <div class="clause-head">
+          <span class="clause-title">SELECT</span>
+          <div class="head-tools">
+            <label class="inline-check">
+              <input type="checkbox" id="distinctToggle"> DISTINCT
+            </label>
+            <button class="btn-add" id="addSelect">+ Column</button>
+          </div>
+        </div>
+        <div id="selectList"></div>
+      </section>
+
+      <section class="clause">
+        <div class="clause-head"><span class="clause-title">FROM</span></div>
+        <div class="row">
+          <input id="fromTable" placeholder="table (e.g. dropship_orders)">
+          <input id="fromAlias" class="w-sm" placeholder="alias (opt)">
+        </div>
+      </section>
+
+      <section class="clause">
+        <div class="clause-head">
+          <span class="clause-title">JOIN</span>
+          <button class="btn-add" id="addJoin">+ Join</button>
+        </div>
+        <div id="joinList"></div>
+      </section>
+
+      <section class="clause">
+        <div class="clause-head">
+          <span class="clause-title">WHERE</span>
+          <div class="head-tools">
+            <div class="logic-toggle" id="whereLogic">
+              <button data-v="AND" class="active">AND</button>
+              <button data-v="OR">OR</button>
+            </div>
+            <button class="btn-add" id="addWhere">+ Condition</button>
+          </div>
+        </div>
+        <div id="whereList"></div>
+      </section>
+
+      <section class="clause">
+        <div class="clause-head">
+          <span class="clause-title">GROUP BY</span>
+          <button class="btn-add" id="addGroup">+ Column</button>
+        </div>
+        <div id="groupList"></div>
+      </section>
+
+      <section class="clause">
+        <div class="clause-head">
+          <span class="clause-title">HAVING</span>
+          <div class="head-tools">
+            <div class="logic-toggle" id="havingLogic">
+              <button data-v="AND" class="active">AND</button>
+              <button data-v="OR">OR</button>
+            </div>
+            <button class="btn-add" id="addHaving">+ Condition</button>
+          </div>
+        </div>
+        <div id="havingList"></div>
+      </section>
+
+      <section class="clause">
+        <div class="clause-head">
+          <span class="clause-title">ORDER BY</span>
+          <button class="btn-add" id="addOrder">+ Column</button>
+        </div>
+        <div id="orderList"></div>
+      </section>
+
+      <section class="clause">
+        <div class="clause-head"><span class="clause-title">LIMIT</span></div>
+        <div class="row">
+          <input id="limitInput" class="narrow" type="number" min="0" placeholder="e.g. 100">
+        </div>
+      </section>
+    </div>
+
+    <!-- ─── RIGHT: LIVE SQL OUTPUT ─────────────────────────────── -->
+    <aside class="output">
+      <div class="output-head">
+        <span class="output-title">Generated SQL</span>
+        <button class="copy-btn" id="copyBtn">Copy</button>
+      </div>
+      <pre id="sqlOutput"></pre>
+      <div class="actions">
+        <button id="resetBtn">Reset all</button>
+        <button id="sampleBtn">Load sample</button>
+      </div>
+      <p class="hint">
+        Values in WHERE / HAVING are written verbatim — wrap strings yourself:
+        <code style="color:var(--string)">'shipped'</code>. Columns and numbers need no quotes.
+      </p>
+    </aside>
+  </div>
+</div>
+
+<script>
+/* ==========================================================================
+   STATE
+   Single source of truth. Every render reads from here, every input writes
+   to here, then refresh() rebuilds DOM + SQL. Nothing else holds state.
+   ========================================================================== */
+const state = {
+  distinct:     false,
+  select:       [ newSelect() ],
+  from:         { table: '', alias: '' },
+  joins:        [],
+  where:        [],
+  whereLogic:   'AND',
+  group:        [],
+  having:       [],
+  havingLogic:  'AND',
+  order:        [],
+  limit:        ''
+};
+
+const uid = () => Math.random().toString(36).slice(2, 9);
+
+function newSelect() { return { id: uid(), fn: '',          expr: '*', alias: '' }; }
+function newJoin()   { return { id: uid(), type: 'INNER JOIN', table: '', alias: '', on: '' }; }
+function newCond()   { return { id: uid(), column: '',      op: '=',   value: '' }; }
+function newGroup()  { return { id: uid(), column: '' }; }
+function newOrder()  { return { id: uid(), column: '',      dir: 'ASC' }; }
+
+
+/* ==========================================================================
+   SELECT — functions, expressions, aliases, DISTINCT
+   ========================================================================== */
+const SELECT_FUNCTIONS = ['', 'COUNT', 'SUM', 'AVG', 'MIN', 'MAX'];
+
+function renderSelect() {
+  const box = document.getElementById('selectList');
+  box.innerHTML = '';
+
+  state.select.forEach(col => {
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.innerHTML = `
+      <select class="w-sm">
+        ${SELECT_FUNCTIONS.map(f =>
+          `<option value="${f}" ${f === col.fn ? 'selected' : ''}>${f || '(none)'}</option>`
+        ).join('')}
+      </select>
+      <input placeholder="column or *" value="${esc(col.expr)}">
+      <input class="w-md" placeholder="alias (AS ...)" value="${esc(col.alias)}">
+      <button class="btn-remove" title="Remove">✕</button>
+    `;
+    const [fnSel, exprInp, aliasInp, rmBtn] = row.querySelectorAll('select, input, button');
+    fnSel.addEventListener('change',    e => { col.fn    = e.target.value; refresh(); });
+    exprInp.addEventListener('input',   e => { col.expr  = e.target.value; refresh(); });
+    aliasInp.addEventListener('input',  e => { col.alias = e.target.value; refresh(); });
+    rmBtn.addEventListener('click', () => {
+      state.select = state.select.filter(c => c.id !== col.id);
+      if (state.select.length === 0) state.select.push(newSelect());
+      refresh();
+    });
+
+    box.appendChild(row);
+  });
+}
+
+function buildSelect() {
+  const parts = state.select.map(col => {
+    const expr  = col.expr.trim() || '*';
+    const base  = col.fn ? `${col.fn}(${expr})` : expr;
+    const alias = col.alias.trim();
+    return alias ? `${base} AS ${alias}` : base;
+  });
+  return `SELECT ${state.distinct ? 'DISTINCT ' : ''}${parts.join(', ')}`;
+}
+
+
+/* ==========================================================================
+   FROM — no list, just one table + alias
+   ========================================================================== */
+function buildFrom() {
+  const t = state.from.table.trim();
+  if (!t) return '';
+  const a = state.from.alias.trim();
+  return `FROM ${t}${a ? ' ' + a : ''}`;
+}
+
+
+/* ==========================================================================
+   JOIN — type, table, alias, ON
+   ========================================================================== */
+const JOIN_TYPES = ['INNER JOIN', 'LEFT JOIN', 'RIGHT JOIN', 'FULL OUTER JOIN', 'CROSS JOIN'];
+
+function renderJoins() {
+  const box = document.getElementById('joinList');
+  box.innerHTML = '';
+
+  if (state.joins.length === 0) {
+    box.innerHTML = '<div class="empty">No joins.</div>';
+    return;
+  }
+
+  state.joins.forEach(j => {
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.innerHTML = `
+      <select class="w-md">
+        ${JOIN_TYPES.map(t => `<option ${t === j.type ? 'selected' : ''}>${t}</option>`).join('')}
+      </select>
+      <input placeholder="table" value="${esc(j.table)}">
+      <input class="w-sm" placeholder="alias" value="${esc(j.alias)}">
+      <input placeholder="ON a.id = b.id" value="${esc(j.on)}">
+      <button class="btn-remove" title="Remove">✕</button>
+    `;
+    const [typeSel, tableInp, aliasInp, onInp, rmBtn] = row.querySelectorAll('select, input, button');
+    typeSel.addEventListener('change',   e => { j.type  = e.target.value; refresh(); });
+    tableInp.addEventListener('input',   e => { j.table = e.target.value; refresh(); });
+    aliasInp.addEventListener('input',   e => { j.alias = e.target.value; refresh(); });
+    onInp.addEventListener('input',      e => { j.on    = e.target.value; refresh(); });
+    rmBtn.addEventListener('click', () => {
+      state.joins = state.joins.filter(x => x.id !== j.id);
+      refresh();
+    });
+
+    box.appendChild(row);
+  });
+}
+
+function buildJoins() {
+  return state.joins
+    .filter(j => j.table.trim())
+    .map(j => {
+      const alias = j.alias.trim() ? ' ' + j.alias.trim() : '';
+      const on    = j.on.trim()    ? ` ON ${j.on.trim()}` : '';
+      // CROSS JOIN has no ON clause
+      return `${j.type} ${j.table.trim()}${alias}${j.type === 'CROSS JOIN' ? '' : on}`;
+    })
+    .join('\n');
+}
+
+
+/* ==========================================================================
+   CONDITIONS — shared by WHERE and HAVING
+   Each row: [column] [operator] [value].
+   Some operators (IS NULL, IN, BETWEEN...) change how value is interpreted.
+   ========================================================================== */
+const OPERATORS = [
+  '=', '!=', '<>', '>', '<', '>=', '<=',
+  'LIKE', 'NOT LIKE',
+  'IN', 'NOT IN',
+  'BETWEEN', 'NOT BETWEEN',
+  'IS NULL', 'IS NOT NULL'
+];
+
+function valueHint(op) {
+  if (op === 'IN' || op === 'NOT IN')             return "1, 2, 3  or  'a', 'b'";
+  if (op === 'BETWEEN' || op === 'NOT BETWEEN')   return '10 AND 20';
+  if (op === 'LIKE' || op === 'NOT LIKE')         return "'%search%'";
+  if (op === 'IS NULL' || op === 'IS NOT NULL')   return '(no value)';
+  return 'value (quote strings)';
+}
+
+function renderConditions(listKey, boxId) {
+  const box = document.getElementById(boxId);
+  box.innerHTML = '';
+
+  if (state[listKey].length === 0) {
+    box.innerHTML = '<div class="empty">No conditions.</div>';
+    return;
+  }
+
+  state[listKey].forEach(c => {
+    const noValue = c.op === 'IS NULL' || c.op === 'IS NOT NULL';
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.innerHTML = `
+      <input placeholder="column" value="${esc(c.column)}">
+      <select class="w-sm">
+        ${OPERATORS.map(o => `<option ${o === c.op ? 'selected' : ''}>${o}</option>`).join('')}
+      </select>
+      <input placeholder="${valueHint(c.op)}" value="${esc(c.value)}" ${noValue ? 'disabled' : ''}>
+      <button class="btn-remove" title="Remove">✕</button>
+    `;
+    const [colInp, opSel, valInp, rmBtn] = row.querySelectorAll('input, select, button');
+    colInp.addEventListener('input',  e => { c.column = e.target.value; refresh(); });
+    opSel.addEventListener('change',  e => { c.op     = e.target.value; refresh(); });
+    valInp.addEventListener('input',  e => { c.value  = e.target.value; refresh(); });
+    rmBtn.addEventListener('click', () => {
+      state[listKey] = state[listKey].filter(x => x.id !== c.id);
+      refresh();
+    });
+
+    box.appendChild(row);
+  });
+}
+
+function compileCondition(c) {
+  const col = c.column.trim();
+  if (!col) return '';
+  if (c.op === 'IS NULL' || c.op === 'IS NOT NULL') return `${col} ${c.op}`;
+
+  const v = c.value.trim();
+  if (!v) return '';
+  if (c.op === 'IN' || c.op === 'NOT IN')           return `${col} ${c.op} (${v})`;
+  if (c.op === 'BETWEEN' || c.op === 'NOT BETWEEN') return `${col} ${c.op} ${v}`;
+  return `${col} ${c.op} ${v}`;
+}
+
+function buildWhere() {
+  const parts = state.where.map(compileCondition).filter(Boolean);
+  return parts.length ? `WHERE ${parts.join(` ${state.whereLogic} `)}` : '';
+}
+
+function buildHaving() {
+  const parts = state.having.map(compileCondition).filter(Boolean);
+  return parts.length ? `HAVING ${parts.join(` ${state.havingLogic} `)}` : '';
+}
+
+
+/* ==========================================================================
+   GROUP BY
+   ========================================================================== */
+function renderGroup() {
+  const box = document.getElementById('groupList');
+  box.innerHTML = '';
+
+  if (state.group.length === 0) {
+    box.innerHTML = '<div class="empty">No grouping.</div>';
+    return;
+  }
+
+  state.group.forEach(g => {
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.innerHTML = `
+      <input placeholder="column" value="${esc(g.column)}">
+      <button class="btn-remove" title="Remove">✕</button>
+    `;
+    const [inp, rm] = row.querySelectorAll('input, button');
+    inp.addEventListener('input', e => { g.column = e.target.value; refresh(); });
+    rm.addEventListener('click', () => {
+      state.group = state.group.filter(x => x.id !== g.id);
+      refresh();
+    });
+
+    box.appendChild(row);
+  });
+}
+
+function buildGroup() {
+  const cols = state.group.map(g => g.column.trim()).filter(Boolean);
+  return cols.length ? `GROUP BY ${cols.join(', ')}` : '';
+}
+
+
+/* ==========================================================================
+   ORDER BY
+   ========================================================================== */
+function renderOrder() {
+  const box = document.getElementById('orderList');
+  box.innerHTML = '';
+
+  if (state.order.length === 0) {
+    box.innerHTML = '<div class="empty">No ordering.</div>';
+    return;
+  }
+
+  state.order.forEach(o => {
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.innerHTML = `
+      <input placeholder="column" value="${esc(o.column)}">
+      <select class="w-sm">
+        <option ${o.dir === 'ASC' ? 'selected' : ''}>ASC</option>
+        <option ${o.dir === 'DESC' ? 'selected' : ''}>DESC</option>
+      </select>
+      <button class="btn-remove" title="Remove">✕</button>
+    `;
+    const [colInp, dirSel, rm] = row.querySelectorAll('input, select, button');
+    colInp.addEventListener('input',  e => { o.column = e.target.value; refresh(); });
+    dirSel.addEventListener('change', e => { o.dir    = e.target.value; refresh(); });
+    rm.addEventListener('click', () => {
+      state.order = state.order.filter(x => x.id !== o.id);
+      refresh();
+    });
+
+    box.appendChild(row);
+  });
+}
+
+function buildOrder() {
+  const parts = state.order
+    .filter(o => o.column.trim())
+    .map(o => `${o.column.trim()} ${o.dir}`);
+  return parts.length ? `ORDER BY ${parts.join(', ')}` : '';
+}
+
+
+/* ==========================================================================
+   LIMIT
+   ========================================================================== */
+function buildLimit() {
+  const n = String(state.limit).trim();
+  return n ? `LIMIT ${n}` : '';
+}
+
+
+/* ==========================================================================
+   FULL QUERY + SYNTAX HIGHLIGHTING
+   ========================================================================== */
+function buildQuery() {
+  return [
+    buildSelect(),
+    buildFrom(),
+    buildJoins(),
+    buildWhere(),
+    buildGroup(),
+    buildHaving(),
+    buildOrder(),
+    buildLimit()
+  ].filter(Boolean).join('\n') + ';';
+}
+
+const HL_KEYWORDS = [
+  'SELECT', 'DISTINCT', 'FROM', 'WHERE', 'AND', 'OR', 'GROUP BY',
+  'HAVING', 'ORDER BY', 'ASC', 'DESC', 'LIMIT', 'AS', 'ON',
+  'INNER JOIN', 'LEFT JOIN', 'RIGHT JOIN', 'FULL OUTER JOIN', 'CROSS JOIN',
+  'IN', 'NOT IN', 'BETWEEN', 'NOT BETWEEN', 'LIKE', 'NOT LIKE',
+  'IS NULL', 'IS NOT NULL'
+].sort((a, b) => b.length - a.length);  // match longer phrases first
+
+const HL_FUNCTIONS = ['COUNT', 'SUM', 'AVG', 'MIN', 'MAX'];
+
+function highlight(sql) {
+  // Escape only HTML-sensitive chars so quote marks remain for string regex
+  let s = sql.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  // Strings first — so keywords inside strings aren't highlighted
+  s = s.replace(/'([^']*)'/g, m => `<span class="str">${m}</span>`);
+
+  // Keywords (case-sensitive since we generate uppercase output)
+  HL_KEYWORDS.forEach(kw => {
+    const rx = new RegExp(`\\b${kw.replace(/ /g, '\\s+')}\\b`, 'g');
+    s = s.replace(rx, m => `<span class="kw">${m}</span>`);
+  });
+
+  // Aggregate functions (only when immediately followed by a parenthesis)
+  HL_FUNCTIONS.forEach(fn => {
+    const rx = new RegExp(`\\b${fn}\\b(?=\\s*\\()`, 'g');
+    s = s.replace(rx, m => `<span class="fn">${m}</span>`);
+  });
+
+  return s;
+}
+
+
+/* ==========================================================================
+   UTILITIES
+   ========================================================================== */
+function esc(str) {
+  // Safe for HTML attribute values — escapes both quote styles
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+
+/* ==========================================================================
+   MAIN REFRESH — called after any state change
+   ========================================================================== */
+function refresh() {
+  renderSelect();
+  renderJoins();
+  renderConditions('where',  'whereList');
+  renderGroup();
+  renderConditions('having', 'havingList');
+  renderOrder();
+  document.getElementById('sqlOutput').innerHTML = highlight(buildQuery());
+}
+
+
+/* ==========================================================================
+   EVENT WIRING
+   Static controls (the ones that exist at page load) are bound once, here.
+   Dynamic rows bind their handlers when rendered, above.
+   ========================================================================== */
+document.getElementById('distinctToggle').addEventListener('change', e => {
+  state.distinct = e.target.checked; refresh();
+});
+
+document.getElementById('addSelect').addEventListener('click', () => { state.select.push(newSelect()); refresh(); });
+document.getElementById('addJoin').addEventListener('click',   () => { state.joins.push(newJoin());    refresh(); });
+document.getElementById('addWhere').addEventListener('click',  () => { state.where.push(newCond());    refresh(); });
+document.getElementById('addGroup').addEventListener('click',  () => { state.group.push(newGroup());   refresh(); });
+document.getElementById('addHaving').addEventListener('click', () => { state.having.push(newCond());   refresh(); });
+document.getElementById('addOrder').addEventListener('click',  () => { state.order.push(newOrder());   refresh(); });
+
+document.getElementById('fromTable').addEventListener('input',  e => { state.from.table = e.target.value; refresh(); });
+document.getElementById('fromAlias').addEventListener('input',  e => { state.from.alias = e.target.value; refresh(); });
+document.getElementById('limitInput').addEventListener('input', e => { state.limit      = e.target.value; refresh(); });
+
+// AND / OR toggles — one handler for both WHERE and HAVING
+function wireLogicToggle(containerId, stateKey) {
+  const buttons = document.querySelectorAll(`#${containerId} button`);
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      state[stateKey] = btn.dataset.v;
+      buttons.forEach(b => b.classList.toggle('active', b === btn));
+      refresh();
+    });
+  });
+}
+wireLogicToggle('whereLogic',  'whereLogic');
+wireLogicToggle('havingLogic', 'havingLogic');
+
+// Copy to clipboard
+document.getElementById('copyBtn').addEventListener('click', async () => {
+  const btn = document.getElementById('copyBtn');
+  try {
+    await navigator.clipboard.writeText(buildQuery());
+    btn.textContent = 'Copied';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1200);
+  } catch {
+    // Clipboard unavailable — fall back silently
+  }
+});
+
+// Reset
+document.getElementById('resetBtn').addEventListener('click', () => {
+  state.distinct = false;
+  state.select   = [ newSelect() ];
+  state.from     = { table: '', alias: '' };
+  state.joins    = [];
+  state.where    = [];
+  state.group    = [];
+  state.having   = [];
+  state.order    = [];
+  state.limit    = '';
+  state.whereLogic = state.havingLogic = 'AND';
+
+  document.getElementById('distinctToggle').checked = false;
+  document.getElementById('fromTable').value   = '';
+  document.getElementById('fromAlias').value   = '';
+  document.getElementById('limitInput').value  = '';
+  document.querySelectorAll('.logic-toggle').forEach(tg => {
+    tg.querySelectorAll('button').forEach((b, i) => b.classList.toggle('active', i === 0));
+  });
+
+  refresh();
+});
+
+// Load sample — a dropship reconciliation-flavoured query to show off the UI
+document.getElementById('sampleBtn').addEventListener('click', () => {
+  state.distinct = false;
+  state.select = [
+    { id: uid(), fn: '',      expr: 'o.account',  alias: 'account' },
+    { id: uid(), fn: 'COUNT', expr: '*',          alias: 'orders'  },
+    { id: uid(), fn: 'SUM',   expr: 'p.amount',   alias: 'paid'    }
+  ];
+  state.from   = { table: 'dropship_orders', alias: 'o' };
+  state.joins  = [
+    { id: uid(), type: 'LEFT JOIN', table: 'payments', alias: 'p', on: 'p.order_id = o.id' }
+  ];
+  state.where  = [
+    { id: uid(), column: 'o.status',     op: '=',  value: "'shipped'"   },
+    { id: uid(), column: 'o.order_date', op: '>=', value: "'2025-01-01'" }
+  ];
+  state.group  = [{ id: uid(), column: 'o.account' }];
+  state.having = [{ id: uid(), column: 'SUM(p.amount)', op: '<', value: '1000' }];
+  state.order  = [{ id: uid(), column: 'paid', dir: 'DESC' }];
+  state.limit  = '50';
+
+  document.getElementById('fromTable').value  = state.from.table;
+  document.getElementById('fromAlias').value  = state.from.alias;
+  document.getElementById('limitInput').value = state.limit;
+  refresh();
+});
+
+// First paint
+refresh();
+</script>
+</body>
+</html>
