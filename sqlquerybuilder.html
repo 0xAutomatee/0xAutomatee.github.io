@@ -358,6 +358,19 @@
 
 <script>
 /* ==========================================================================
+   HELPERS — id generator and row factories.
+   Declared first because STATE below calls newSelect() during initialization.
+   ========================================================================== */
+const uid = () => Math.random().toString(36).slice(2, 9);
+
+function newSelect() { return { id: uid(), fn: '',            expr: '*', alias: '' }; }
+function newJoin()   { return { id: uid(), type: 'INNER JOIN', table: '', alias: '', on: '' }; }
+function newCond()   { return { id: uid(), column: '',         op: '=',   value: '' }; }
+function newGroup()  { return { id: uid(), column: '' }; }
+function newOrder()  { return { id: uid(), column: '',         dir: 'ASC' }; }
+
+
+/* ==========================================================================
    STATE
    Single source of truth. Every render reads from here, every input writes
    to here, then refresh() rebuilds DOM + SQL. Nothing else holds state.
@@ -375,14 +388,6 @@ const state = {
   order:        [],
   limit:        ''
 };
-
-const uid = () => Math.random().toString(36).slice(2, 9);
-
-function newSelect() { return { id: uid(), fn: '',          expr: '*', alias: '' }; }
-function newJoin()   { return { id: uid(), type: 'INNER JOIN', table: '', alias: '', on: '' }; }
-function newCond()   { return { id: uid(), column: '',      op: '=',   value: '' }; }
-function newGroup()  { return { id: uid(), column: '' }; }
-function newOrder()  { return { id: uid(), column: '',      dir: 'ASC' }; }
 
 
 /* ==========================================================================
