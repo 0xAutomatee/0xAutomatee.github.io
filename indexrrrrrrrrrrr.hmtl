@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#014EAA">
+    <meta name="keyword" content="Jasa bikin website, Portfolio Ans Raza, Developer Ans Raza, Ans Raza, Dev by Z">
+    <meta name="description" content="Portfolio Ans Raza">
+    <title>Ans Raza</title>
+    <link rel="icon" href="https://img.icons8.com/fluent/48/000000/source-code.png">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="assets/slideinscroll/slidein.css">
+    <link rel="stylesheet" href="css/style.css?v=2.1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+</head>
+
+<body>
+
+    <div id="particles-js" style="position: fixed; top: 0; bottom: 0; left: 0; right: 0; z-index: -1;"></div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="https://0xAnsR.github.io">Ans Raza</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav ml-auto">
+                    <a class="nav-link" href="#home">Home</a>
+                    <a class="nav-link" href="#experience">Experience</a>
+                    <a class="nav-link" href="#certifications">Certifications</a>
+                    <a class="nav-link" href="#skills">Skills</a>
+                    <a class="nav-link" href="#projects">Projects</a>
+                    <a class="nav-link" href="#contact">Contact</a>
+                     <a class="nav-link" href="edu.html">.edu</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="home" id="home">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-lg-7">
+                    <h1 class="display-4 font-weight-bold">Ans Raza</h1>
+                    <h3 class="text-white-50 mb-4">Cybersecurity Enthusiast & Fullstack Developer</h3>
+                    <p class="lead text-white">Computer Science undergraduate with a strong focus on ethical penetration testing, automation, and practical security research.</p>
+                    <div class="mt-5">
+                        <a href="#about" class="btn btn-outline-light btn-user mr-3">About Me</a>
+                        <a href="https://mail.google.com/mail/?view=cm&fs=1&to=ansrazaofficial@gmaildotcom"
+                            class="btn btn-primary btn-user">
+                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="17" height="17"
+                                viewBox="0 0 172 172" style=" fill:#000000;">
+                                <g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt"
+                                    stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0"
+                                    font-family="none" font-weight="none" font-size="none" text-anchor="none"
+                                    style="mix-blend-mode: normal">
+                                    <path d="M0,172v-172h172v172z" fill="none"></path>
+                                    <g fill="#ffffff">
+                                        <path
+                                            d="M0,21.5v24.41146l86,43l86,-43v-24.41146zM0,59.57292v90.92708h172v-90.92708l-86,43z">
+                                        </path>
+                                    </g>
+                                    <g fill="#cccccc">
+                                        <path d="M99.195,68.94v3.7h-10.97v30.42h-4.48v-30.42h-10.94v-3.7z"></path>
+                                    </g>
+                                </g>
+                            </svg>
+                            <span class="ml-2 text-white">Contact</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-1"></div>
+                <div class="col-md-4 col-lg-4">
+                    <img loading="lazy" src="img/server-room.png" alt="Server Room" class="img-fluid d-none d-md-block animated pulse infinite">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="about" class="pt-5"></div>
+    <div class="label-menu js-slidein">
+        <p>About Me</p>
+    </div>
+
+    <div class="about-section mb-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-7 js-slidein">
+                    <h2 class="mb-4">Professional Profile</h2>
+                    <p>I am Ans Raza, a Computer Science undergraduate and cybersecurity enthusiast with a strong focus on ethical penetration testing, automation, and practical security research.</p>
+                    <p>With authorized experience in ethical hacking and vulnerability assessment, I actively explore offensive security methodologies, system exploitation techniques, and defensive countermeasures. My goal is to build secure, scalable systems while continuously improving my knowledge in cybersecurity and Python-driven automation.</p>
+                    <p>I document my technical journey through blogs and open-source projects on GitHub, where I build tools, automation scripts, and web-based utilities. My interests extend into basic machine learning applications for cybersecurity and scripting for process optimization.</p>
+                </div>
+                <div class="col-md-5 js-slidein">
+                    <div class="card bg-light border-0 shadow-sm">
+                        <div class="card-body">
+                            <h4 class="mb-3">Personal Philosophy</h4>
+                            <ul class="list-unstyled">
+                                <li class="mb-2"><i class="text-primary mr-2">✓</i> Continuous skill improvement</li>
+                                <li class="mb-2"><i class="text-primary mr-2">✓</i> Ethical & responsible security research</li>
+                                <li class="mb-2"><i class="text-primary mr-2">✓</i> Practical implementation over theory</li>
+                                <li class="mb-2"><i class="text-primary mr-2">✓</i> Documenting progress publicly</li>
+                                <li class="mb-2"><i class="text-primary mr-2">✓</i> Building tools that solve real problems</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="focus" class="pt-4"></div>
+    <div class="label-menu js-slidein">
+        <p>Technical Focus</p>
+    </div>
+
+    <div class="focus-areas mb-5">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-4 col-lg-3 mb-4 js-slidein">
+                    <div class="p-4 border rounded bg-white shadow-sm h-100">
+                        <h5>Ethical Penetration Testing</h5>
+                        <p class="small text-muted">Authorized Testing Only</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-3 mb-4 js-slidein">
+                    <div class="p-4 border rounded bg-white shadow-sm h-100">
+                        <h5>Cybersecurity Automation</h5>
+                        <p class="small text-muted">Python-driven tools</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-3 mb-4 js-slidein">
+                    <div class="p-4 border rounded bg-white shadow-sm h-100">
+                        <h5>Web App Security</h5>
+                        <p class="small text-muted">Vulnerability Assessment</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-3 mb-4 js-slidein">
+                    <div class="p-4 border rounded bg-white shadow-sm h-100">
+                        <h5>Linux Operations</h5>
+                        <p class="small text-muted">System Administration</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="experience" class="pt-4"></div>
+
+    <div class="label-menu js-slidein">
+        <p>
+            Experience
+        </p>
+    </div>
+
+    <div class="experience">
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+                <div class=" col-10 col-md-11">
+                    <div class="row">
+                        <div class="col-md-6 js-slidein my-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-3 d-none d-md-block">
+                                            <img loading="lazy" src="img/trophy.png" alt="Trophy">
+                                        </div>
+                                        <div class="col-12 col-md-7">
+                                            <h4 class="position-relative mb-4">Join the race</h4>
+                                            <p class="font-italic">Once represented SMKN 2 Kandangan to take part in the Provincial Level Vocational High School LKS Competition (2019) in the IT Network System Administration competition.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 js-slidein my-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-3 d-none d-md-block">
+                                            <img loading="lazy" src="img/trophy.png" alt="Trophy">
+                                        </div>
+                                        <div class="col-12 col-md-7">
+                                            <h4 class="position-relative mb-4">Join the race</h4>
+                                            <p class="font-italic">Will represent SMKN 2 Kandangan to participate in the Provincial Level SMK LKS Competition (2021) in the IT Software Solution for Business competition.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="certifications" class="pt-4"></div>
+
+    <div class="label-menu js-slidein">
+        <p>
+            Certifications
+        </p>
+    </div>
+
+    <div class="certifications">
+        <div class="container">
+            <div class="row justify-content-center">
+                <!-- Existing Badge 
+                <div class="col-md-4 text-center js-slidein mb-4">
+                    <div class="card h-100 border-0 shadow-sm p-3">
+                        <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="9cf11f2f-f03b-45a4-b411-e6735c1d401b" data-share-badge-host="https://www.credly.com"></div>
+                    </div>
+                </div> -->
+                <!-- New Azure AI Badge -->
+                <div class="col-md-6 js-slidein mb-4">
+                    <div class="card h-100 border-0 shadow-sm p-4">
+                        <div class="row align-items-center">
+                            <div class="col-sm-4 text-center">
+                                <img loading="lazy" src="https://images.credly.com/size/340x340/images/4136ced8-75d5-4afb-8677-40b6236e2672/azure-ai-fundamentals-600x600.png" alt="Azure AI Fundamentals" class="img-fluid mb-3" style="max-height: 120px;">
+                            </div>
+                            <div class="col-sm-8">
+                                <h5 class="font-weight-bold">Microsoft Certified: Azure AI Fundamentals</h5>
+                                <p class="small text-muted mb-2">Issued by Microsoft</p>
+                                <p class="small">Earners of the Azure AI Fundamentals certification have demonstrated foundational knowledge of machine learning (ML) and artificial intelligence (AI) concepts and related Microsoft Azure services.</p>
+                                <div class="mt-2">
+                                    <span class="badge badge-primary mr-1">Azure Bot Services</span>
+                                    <span class="badge badge-primary mr-1">Azure Machine Learning</span>
+                                    <span class="badge badge-primary mr-1">Cognitive Services</span>
+                                </div>
+                                <a href="https://www.credly.com/badges/9cf11f2f-f03b-45a4-b411-e6735c1d401b/embedded" target="_blank" class="btn btn-link btn-sm p-0 mt-3 text-primary">Verify Credential →</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-linear-primary">
+
+        <div id="skills" class="pt-3"></div>
+
+        <div class="label-menu js-slidein">
+            <p>
+                Skills
+            </p>
+        </div>
+
+        <div class="skills">
+            <div class="container text-white">
+                <h3 class="text-center mb-5 js-slidein">Core Skills</h3>
+                <div class="row">
+                    <div class="col-md-6 js-slidein mb-5">
+                        <h4>Programming & Development</h4>
+                        <ul class="list-unstyled mt-4">
+                            <li class="mb-3"><strong>Python</strong> – Security scripting, automation, tool development</li>
+                            <li class="mb-3"><strong>PHP</strong> – Backend development</li>
+                            <li class="mb-3"><strong>C#</strong> – Intermediate level</li>
+                            <li class="mb-3"><strong>JavaScript / jQuery</strong> – Advanced usage</li>
+                            <li class="mb-3"><strong>TypeScript</strong> – Project-based usage</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6 js-slidein mb-5">
+                        <h4>Web Technologies</h4>
+                        <div class="row text-center">
+                            <div class="col-4 mb-3"><img loading="lazy" src="img/html.png" style="height: 40px;"><br><small>HTML</small></div>
+                            <div class="col-4 mb-3"><img loading="lazy" src="img/css.png" style="height: 40px;"><br><small>CSS</small></div>
+                            <div class="col-4 mb-3"><img loading="lazy" src="img/bootstrap.png" style="height: 40px;"><br><small>Bootstrap</small></div>
+                            <div class="col-4 mb-3"><img loading="lazy" src="img/tailwindcss.png" style="height: 40px;"><br><small>Tailwind CSS</small></div>
+                            <div class="col-4 mb-3"><img loading="lazy" src="img/vue.png" style="height: 40px;"><br><small>Vue.js</small></div>
+                            <div class="col-4 mb-3"><img loading="lazy" src="img/laravel.png" style="height: 40px;"><br><small>Laravel</small></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 js-slidein mb-5">
+                        <h4>Databases</h4>
+                        <div class="row text-center">
+                            <div class="col-4 mb-3"><img loading="lazy" src="img/mysql.png" style="height: 40px;"><br><small>MySQL</small></div>
+                            <div class="col-4 mb-3"><img loading="lazy" src="img/sql-server.png" style="height: 40px;"><br><small>SQL Server</small></div>
+                            <div class="col-4 mb-3"><img loading="lazy" src="img/phpmyadmin.png" style="height: 40px;"><br><small>phpMyAdmin</small></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 js-slidein mb-5">
+                        <h4>Data Automation & SQL Reporting</h4>
+                        <ul class="list-unstyled mt-4">
+                            <li class="mb-2"><strong>SQL Server</strong> – Dynamic SQL, stored procedures, joins, grouping, and aggregation</li>
+                            <li class="mb-2"><strong>Report Automation</strong> – Multi-step SQL workflows and automated report generation</li>
+                            <li class="mb-2"><strong>Data Cleaning</strong> – Type conversion, validation, matching, and error debugging</li>
+                            <li class="mb-2"><strong>ETL Workflows</strong> – Import, process, transform, and export business data</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6 js-slidein mb-5">
+                        <h4>Excel & Financial Reconciliation</h4>
+                        <ul class="list-unstyled mt-4">
+                            <li class="mb-2"><strong>Advanced Excel</strong> – SUMIF, SUMIFS, pivot-style reports, and formula-based matching</li>
+                            <li class="mb-2"><strong>Invoice Matching</strong> – Credit applied sheets, payment matching, and PO reconciliation</li>
+                            <li class="mb-2"><strong>Financial Reporting</strong> – Deduction tracking, chargeback analysis, and variance checking</li>
+                            <li class="mb-2"><strong>Data Accuracy</strong> – Difference analysis, unmatched order review, and audit checks</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6 js-slidein mb-5">
+                        <h4>Systems & Tools</h4>
+                        <ul class="list-unstyled mt-4">
+                            <li class="mb-2"><strong>Linux</strong> – Intermediate level</li>
+                            <li class="mb-2"><strong>RESTful API</strong> – Integration & Development</li>
+                            <li class="mb-2"><strong>Git & GitHub</strong> – Version Control</li>
+                            <li class="mb-2"><strong>VS Code</strong> – Primary IDE</li>
+                            <li class="mb-2"><strong>Microsoft Excel</strong> – Business reporting and reconciliation</li>
+                            <li class="mb-2"><strong>SSMS</strong> – SQL Server query writing and debugging</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="row text-center justify-content-center mt-5">
+                    <div class="col-md-10 js-slidein">
+                        <h4 class="mb-4">Professional Direction</h4>
+                        <p class="lead">Building expertise in advanced penetration testing, security automation with Python, secure backend architecture, and API security testing.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="projects" class="pt-4"></div>
+
+    <div class="label-menu js-slidein">
+        <p>
+            Projects
+        </p>
+    </div>
+
+    <div class="projects" style="padding: 50px 0;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 js-slidein my-3">
+                    <div class="card h-100">
+                        <div class="m-3 text-center">
+                            <img loading="lazy" src="https://img.icons8.com/fluent/100/000000/github.png" class="card-img-top" alt="Project" style="width: 100px; margin: auto;">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-text">VSCODE-THEMED-PORTFOLIO</h5>
+                            <p class="card-text small">Personal portfolio with Visual Studio Code IDE theme.</p>
+                            <ul class="tag">
+                                <li>#TYPESCRIPT</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 js-slidein my-3">
+                    <div class="card h-100">
+                        <div class="m-3 text-center">
+                            <img loading="lazy" src="https://img.icons8.com/fluent/100/000000/github.png" class="card-img-top" alt="Project" style="width: 100px; margin: auto;">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-text">BROWSER-FRIEND</h5>
+                            <p class="card-text small">GPT in your browser.</p>
+                            <ul class="tag">
+                                <li>#TYPESCRIPT</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 js-slidein my-3">
+                    <div class="card h-100">
+                        <div class="m-3 text-center">
+                            <img loading="lazy" src="https://img.icons8.com/fluent/100/000000/github.png" class="card-img-top" alt="Project" style="width: 100px; margin: auto;">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-text">TIKTOK-API</h5>
+                            <p class="card-text small">Unofficial TikTok API Wrapper In Python.</p>
+                            <ul class="tag">
+                                <li>#PYTHON</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 js-slidein my-3">
+                    <div class="card h-100">
+                        <div class="m-3 text-center">
+                            <img loading="lazy" src="https://img.icons8.com/fluent/100/000000/github.png" class="card-img-top" alt="Project" style="width: 100px; margin: auto;">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-text">SIGMADOWNLOADER</h5>
+                            <p class="card-text small">A downloader utility.</p>
+                            <ul class="tag">
+                                <li>#PYTHON</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 js-slidein my-3">
+                    <div class="card h-100">
+                        <div class="m-3 text-center">
+                            <img loading="lazy" src="https://img.icons8.com/fluent/100/000000/github.png" class="card-img-top" alt="Project" style="width: 100px; margin: auto;">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-text">YOUTUBE.PK</h5>
+                            <p class="card-text small">YouTube related utility.</p>
+                            <ul class="tag">
+                                <li>#PYTHON</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 js-slidein my-3">
+                    <div class="card h-100">
+                        <div class="m-3 text-center">
+                            <img loading="lazy" src="https://img.icons8.com/fluent/100/000000/github.png" class="card-img-top" alt="Project" style="width: 100px; margin: auto;">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-text">KNIGHTBOT-MD</h5>
+                            <p class="card-text small">Simple WhatsApp bot to manage groups.</p>
+                            <ul class="tag">
+                                <li>#JAVASCRIPT</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 js-slidein my-3">
+                    <div class="card h-100">
+                        <div class="m-3 text-center">
+                            <img loading="lazy" src="https://img.icons8.com/fluent/100/000000/github.png" class="card-img-top" alt="Project" style="width: 100px; margin: auto;">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-text">STOCK-SHEET</h5>
+                            <p class="card-text small">Store manager application.</p>
+                            <ul class="tag">
+                                <li>#HTML</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 js-slidein my-3">
+                    <div class="card h-100">
+                        <div class="m-3 text-center">
+                            <img loading="lazy" src="https://img.icons8.com/fluent/100/000000/github.png" class="card-img-top" alt="Project" style="width: 100px; margin: auto;">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-text">ITEM-LIST-CLOTH</h5>
+                            <p class="card-text small">Clothing item list manager.</p>
+                            <ul class="tag">
+                                <li>#HTML</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 js-slidein my-3">
+                    <div class="card h-100">
+                        <div class="m-3 text-center">
+                            <img loading="lazy" src="https://img.icons8.com/fluent/100/000000/github.png" class="card-img-top" alt="Project" style="width: 100px; margin: auto;">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-text">NOMORE</h5>
+                            <p class="card-text small">PHP project.</p>
+                            <ul class="tag">
+                                <li>#PHP</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 js-slidein my-3">
+                    <div class="card h-100">
+                        <div class="m-3 text-center">
+                            <img loading="lazy" src="https://img.icons8.com/fluent/100/000000/github.png" class="card-img-top" alt="Project" style="width: 100px; margin: auto;">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-text">MINI-AI</h5>
+                            <p class="card-text small">AI related experiment.</p>
+                            <ul class="tag">
+                                <li>#AI</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 js-slidein my-3">
+                    <div class="card h-100">
+                        <div class="m-3 text-center">
+                            <img loading="lazy" src="https://img.icons8.com/fluent/100/000000/github.png" class="card-img-top" alt="Project" style="width: 100px; margin: auto;">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-text">CREATOR-CLUB</h5>
+                            <p class="card-text small">A community for creators.</p>
+                            <ul class="tag">
+                                <li>#WEB</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 js-slidein my-3">
+                    <div class="card h-100">
+                        <div class="m-3 text-center">
+                            <img loading="lazy" src="https://img.icons8.com/fluent/100/000000/github.png" class="card-img-top" alt="Project" style="width: 100px; margin: auto;">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-text">0XANSR.GITHUB.IO</h5>
+                            <p class="card-text small">Official portfolio site.</p>
+                            <ul class="tag">
+                                <li>#HTML</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 js-slidein my-3">
+                    <div class="card h-100">
+                        <div class="m-3 text-center">
+                            <img loading="lazy" src="https://img.icons8.com/fluent/100/000000/globe.png" class="card-img-top" alt="Project" style="width: 100px; margin: auto;">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-text">STRATEGIC-WORLD-MAP</h5>
+                            <p class="card-text small">Interactive world map with strategic regional analysis and geospatial visualization.</p>
+                            <a href="map/mymap.html" class="btn btn-sm btn-outline-primary mt-2">Explore Map</a>
+                            <ul class="tag">
+                                <li>#GEOSPATIAL</li>
+                                <li>#JS</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-grey">
+
+        <div id="contact" class="pt-4"></div>
+
+        <div class="label-menu js-slidein">
+            <p>
+                Contact
+            </p>
+        </div>
+
+        <div class="contact">
+            <div class="container">
+                <div class="text-center">
+                    <img loading="lazy" src="img/0xAnsR.jpg" class="img-fluid pp mt-5 js-slidein" alt="0xAnsR">
+                    <h1 class="js-slidein"><b>Anas</b> Raza</h1>
+                    <p class="js-slidein">Fullstack Web Developer</p>
+
+   <div class="js-slidein"> <img loading="lazy" src="https://img.icons8.com/color/48/000000/facebook-new.png" class="smd" id="go-fb" /> <img loading="lazy" src="https://img.icons8.com/color/48/000000/telegram-app.png" class="smd" id="go-tl" /> <img loading="lazy" src="https://img.icons8.com/fluent/48/000000/instagram-new.png" class="smd" id="go-ig" /> <img loading="lazy" src="https://img.icons8.com/fluent/48/000000/github.png" class="smd" id="go-github" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
+
+    <div class="footer shadow-lg">
+        <div class="container">
+            <p>&copy; 2020 Designed by Ans Raza | <span class="badge badge-secondary">v2.1.0</span></p>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+    </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="assets/slideinscroll/slideIn.js"></script>
+    <script src="assets/particles/particles.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>
