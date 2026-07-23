@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Pages V001</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400..700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f3ede3;
+            --panel: #fffdf9;
+            --line: #dfd1be;
+            --text: #261d13;
+            --muted: #776957;
+            --accent: #8f5a23;
+            --accent-soft: #f6e7d2;
+            --ok-bg: #edf8f1;
+            --ok-line: #b8dec5;
+            --ok-text: #245b41;
+            --info-bg: #f9f3ea;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            font-size: 16px;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top right, rgba(241, 203, 151, 0.6), transparent 26%),
+                linear-gradient(180deg, #eee3d3 0%, #f8f5ef 100%);
+        }
+
+        .wrap {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 0 56px;
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05);
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            padding: 8px 10px;
+            padding-bottom: 28px;
+            border-radius: 0 0 14px 14px;
+            background: rgba(255, 253, 249, 0.96);
+            backdrop-filter: blur(10px);
+            overflow: visible;
+        }
+
+        .topbar[data-ribbon-mode="tabs-only"] .sub,
+        .topbar[data-ribbon-mode="tabs-only"] .controls {
+            display: none;
+        }
+
+        .topbar-display-dock {
+            position: absolute;
+            right: 10px;
+            bottom: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2px;
+            z-index: 40;
+        }
+
+        .cache-refresh-btn {
+            min-height: 32px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+
+        .cache-toast {
+            position: fixed;
+            top: 14px;
+            right: 14px;
+            z-index: 120;
+            max-width: 300px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            background: rgba(42, 28, 12, 0.94);
+            border: 1px solid rgba(255, 242, 222, 0.18);
+            color: #fff7ee;
+            font-size: 0.76rem;
+            line-height: 1.35;
+            box-shadow: 0 16px 34px rgba(42, 28, 12, 0.24);
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+            transition: opacity 0.22s ease, transform 0.22s ease;
+        }
+
+        .cache-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .topbar-display-btn {
+            padding: 4px 7px;
+            min-height: 24px;
+            font-size: 0.68rem;
+            border-radius: 8px;
+        }
+
+        .topbar-display-menu {
+            position: absolute;
+            right: 0;
+            top: 28px;
+            display: none;
+            min-width: 138px;
+            padding: 4px;
+            background: rgba(255, 253, 249, 0.98);
+            border: 1px solid #dfd1be;
+            border-radius: 10px;
+            box-shadow: 0 10px 24px rgba(42, 28, 12, 0.14);
+        }
+
+        .topbar-display-menu.open {
+            display: grid;
+            gap: 4px;
+        }
+
+        .topbar-display-menu button {
+            width: 100%;
+            justify-content: flex-start;
+            text-align: left;
+            background: #fcf7ef;
+            color: #5b3a17;
+            box-shadow: none;
+        }
+
+        .topbar-display-menu button.active {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .topbar-grip {
+            font-size: 0.62rem;
+            line-height: 1;
+            color: #8f7a62;
+            letter-spacing: 0.18em;
+            user-select: none;
+        }
+
+        h1, h2, h3, p {
+            margin-top: 0;
+        }
+
+        h1 {
+            margin-bottom: 2px;
+            font-size: clamp(1.05rem, 0.95rem + 0.7vw, 1.4rem);
+            line-height: 1.05;
+            letter-spacing: -0.02em;
+        }
+
+        .title-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 8px 12px;
+        }
+
+        .title-meta {
+            color: var(--muted);
+            font-size: 0.76rem;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+
+        .title-version {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 7px;
+            margin-left: 6px;
+            border-radius: 999px;
+            background: #fcf7ef;
+            border: 1px solid #dfd1be;
+            color: #5b3a17;
+            font-weight: 700;
+            font-size: 0.7rem;
+            vertical-align: middle;
+        }
+
+        .sub {
+            color: var(--muted);
+            margin-bottom: 8px;
+            font-size: 0.72rem;
+            line-height: 1.2;
+        }
+
+        .controls {
+            display: grid;
+            gap: 10px;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .box,
+        .toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #fcf7ef;
+            border: 1px solid #e4d4bf;
+            border-radius: 10px;
+            padding: 5px 7px;
+            min-height: 28px;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        }
+
+        .box input[type="search"],
+        .box input[type="url"] {
+            min-width: 280px;
+            border: 0;
+            outline: none;
+            background: transparent;
+            color: var(--text);
+            font-size: 0.92rem;
+        }
+
+        .toggle input {
+            accent-color: var(--accent);
+        }
+
+        .box span,
+        .toggle span {
+            font-size: 0.74rem;
+            line-height: 1;
+            white-space: nowrap;
+        }
+
+        button {
+            border: 0;
+            border-radius: 10px;
+            padding: 5px 8px;
+            background: var(--accent);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.74rem;
+            line-height: 1.05;
+            letter-spacing: 0.01em;
+            cursor: pointer;
+            min-height: 28px;
+            box-shadow: 0 4px 10px rgba(143, 90, 35, 0.16);
+        }
+
+        button.secondary {
+            background: #e7d3b7;
+            color: #5b3a17;
+        }
+
+        .meta {
+            color: var(--muted);
+            font-size: 0.72rem;
+            line-height: 1.15;
+        }
+
+        .select-box select,
+        .select-box input[type="number"],
+        .pager-input {
+            border: 0;
+            outline: none;
+            background: transparent;
+            color: var(--text);
+            font-size: 0.78rem;
+            min-width: 56px;
+        }
+
+        .page-status {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            align-items: center;
+            color: var(--muted);
+            font-size: 0.72rem;
+            line-height: 1;
+        }
+
+        .page-status strong {
+            color: var(--text);
+        }
+
+        .pager-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .page-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            width: fit-content;
+            padding: 5px 7px;
+            background: #fcf7ef;
+            border: 1px solid #e4d4bf;
+            border-radius: 9px;
+            color: var(--text);
+            white-space: nowrap;
+        }
+
+        .topbar .pager-nav button {
+            padding: 4px 7px;
+            min-height: 26px;
+            width: fit-content;
+        }
+
+        .topbar .pager-nav .box,
+        .topbar .select-box {
+            padding: 4px 7px;
+            width: fit-content;
+        }
+
+        .topbar #pageSelect,
+        .topbar #perPageInput {
+            min-width: 0;
+            width: fit-content;
+        }
+
+        .topbar #pageSelect {
+            min-width: 52px;
+        }
+
+        .topbar #perPageInput {
+            width: 40px;
+            text-align: center;
+        }
+
+        button:disabled {
+            cursor: not-allowed;
+            opacity: 0.55;
+        }
+
+        .sticky-pager {
+            position: fixed;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            z-index: 9999;
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 3px;
+            align-items: center;
+            justify-content: center;
+            padding: 3px 4px;
+            background: rgba(255, 253, 249, 0.96);
+            border: 1px solid var(--line);
+            border-radius: 14px 14px 0 0;
+            box-shadow: 0 16px 36px rgba(42, 28, 12, 0.15);
+            backdrop-filter: blur(10px);
+            max-width: calc(100vw - 24px);
+            width: fit-content;
+        }
+
+        :fullscreen .sticky-pager,
+        :-webkit-full-screen .sticky-pager {
+            position: fixed;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            z-index: 9999;
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
+        .sticky-pager .page-status {
+            width: auto;
+            flex-wrap: nowrap;
+            gap: 2px;
+            white-space: nowrap;
+            font-size: 0.78rem;
+            line-height: 1.15;
+            flex: 0 0 auto;
+        }
+
+        .sticky-pager .pager-nav {
+            width: auto;
+            flex-wrap: nowrap;
+            gap: 2px;
+            flex: 0 0 auto;
+        }
+
+        .sticky-pager button {
+            padding: 2px 4px;
+            min-height: 22px;
+            border-radius: 10px;
+            font-size: 0.78rem;
+            line-height: 1.05;
+            width: fit-content;
+            white-space: nowrap;
+        }
+
+        .sticky-pager .box {
+            gap: 2px;
+            padding: 2px 4px;
+            border-radius: 10px;
+            width: fit-content;
+            flex: 0 0 auto;
+        }
+
+        .sticky-pager .box span {
+            font-size: 0.75rem;
+            line-height: 1.05;
+            white-space: nowrap;
+        }
+
+        .sticky-pager .select-box select,
+        .sticky-pager .select-box input[type="number"] {
+            min-width: 0;
+            width: fit-content;
+            font-size: 0.78rem;
+            line-height: 1.05;
+        }
+
+        .sticky-pager #stickyPageStats {
+            width: fit-content;
+            white-space: nowrap;
+        }
+
+        .sticky-pager #stickyPageSelect {
+            min-width: 74px;
+        }
+
+        .sticky-pager #stickyPerPageInput {
+            width: 38px;
+            text-align: center;
+        }
+
+        .sticky-pager .sticky-label {
+            font-size: 0.75rem;
+            color: var(--muted);
+            white-space: nowrap;
+        }
+
+        .results {
+            margin-top: 18px;
+            display: grid;
+            gap: 0;
+        }
+
+        .empty {
+            padding: 36px 20px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 1rem;
+            line-height: 1.65;
+        }
+
+        .mcq {
+            overflow: hidden;
+            width: min(100%, 210mm);
+            margin: 0 auto;
+            border-radius: 8px;
+            box-shadow: 0 12px 30px rgba(71, 48, 23, 0.08);
+        }
+
+        .mcq-divider {
+            width: min(100%, 210mm);
+            margin: 0 auto;
+            border: 0;
+            border-top: 3px solid #b98953;
+            opacity: 0.95;
+        }
+
+        .mcq-head {
+            display: none;
+        }
+
+        .mcq-meta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-start;
+            max-width: 100%;
+            padding: 0;
+            border-radius: 0;
+            background: transparent;
+            border: 0;
+            color: #776957;
+            font-size: 0.52rem;
+            line-height: 1.05;
+            letter-spacing: 0;
+            white-space: nowrap;
+            width: fit-content;
+            margin-top: 8px;
+        }
+
+        .mcq-meta a {
+            color: var(--accent);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .mcq-meta a:hover {
+            text-decoration: underline;
+        }
+
+        .section {
+            padding: 5px 26px;
+            border-bottom: 1px solid #e7dccf;
+            font-size: 0.82rem;
+            line-height: 1.32;
+        }
+
+        .question-block {
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            padding: 0;
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+        }
+
+        .content-flow {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 100%;
+            gap: 6px;
+        }
+
+        .question-english {
+            font-size: 0.96rem;
+            font-weight: 700;
+            line-height: 1.12;
+            letter-spacing: 0;
+            margin-bottom: 4px;
+        }
+
+        .question-urdu {
+            direction: rtl;
+            text-align: right;
+            font-family: "Noto Nastaliq Urdu", "Jameel Noori Nastaleeq", "Jameel Noori", "Urdu Typesetting", serif !important;
+            font-optical-sizing: auto;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 1rem;
+            line-height: 1.28;
+            color: #3c2d1f;
+            margin-bottom: 2px;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 10px;
+            width: 100%;
+            max-width: 100%;
+            align-items: flex-start;
+        }
+
+        .option {
+            display: inline-flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 2px 0;
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+            width: auto;
+            max-width: min(100%, 320px);
+            margin-right: 14px;
+            cursor: pointer;
+        }
+
+        .option.correct-mark {
+            background: transparent;
+            border-color: transparent;
+        }
+
+        .option.selected .option-label {
+            color: #8f5a23;
+            text-decoration: underline;
+        }
+
+        .option.correct-reveal .option-label,
+        .option.correct-reveal .option-value {
+            color: #c1121f;
+            font-weight: 700;
+        }
+
+        .option.wrong-pick .option-label,
+        .option.wrong-pick .option-value {
+            color: #6c757d;
+        }
+
+        .option-label {
+            width: 24px;
+            height: auto;
+            border-radius: 0;
+            display: inline-flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+            background: transparent;
+            color: #4b3620;
+            font-weight: 700;
+            font-size: 0.82rem;
+            flex: 0 0 auto;
+        }
+
+        .option.correct-mark .option-label {
+            background: transparent;
+            color: var(--ok-text);
+        }
+
+        .option-value {
+            font-size: 0.84rem;
+            line-height: 1.22;
+            word-break: break-word;
+        }
+
+        .explanation-box {
+            margin-top: 4px;
+            border-radius: 6px;
+            padding: 8px 10px;
+            font-size: 0.8rem;
+            line-height: 1.28;
+        }
+
+        .explanation-box {
+            background: #fff8ef;
+            border: 1px solid #eadbc6;
+            width: fit-content;
+            max-width: 100%;
+        }
+
+        .mini-link {
+            display: inline;
+            border: 0;
+            padding: 0;
+            margin: 0;
+            background: transparent;
+            color: var(--accent);
+            font: inherit;
+            font-size: 0.76rem;
+            font-weight: 700;
+            line-height: 1.2;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .mini-link:hover {
+            text-decoration: underline;
+        }
+
+        .correct-answer-highlight {
+            color: #c1121f;
+            font-style: italic;
+            font-weight: 700;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 760px) {
+            .wrap {
+                padding: 0 0 56px;
+            }
+
+            .topbar,
+            .section {
+                padding-left: 8px;
+                padding-right: 8px;
+            }
+
+            .topbar-display-dock {
+                right: 8px;
+            }
+
+            .box input[type="search"],
+            .box input[type="url"] {
+                min-width: 180px;
+                width: 100%;
+            }
+
+            .row {
+                align-items: stretch;
+            }
+
+            .mcq-meta {
+                justify-content: flex-start;
+                font-size: 0.5rem;
+                padding: 0;
+                white-space: normal;
+            }
+
+            .question-english {
+                font-size: 0.9rem;
+                line-height: 1.1;
+            }
+
+            .question-urdu {
+                font-size: 0.92rem;
+                line-height: 1.24;
+            }
+
+            .option-value,
+            .explanation-box {
+                font-size: 0.8rem;
+            }
+
+            .section {
+                font-size: 0.8rem;
+                line-height: 1.24;
+            }
+
+            .mini-link {
+                font-size: 0.72rem;
+            }
+
+            .sticky-pager {
+                bottom: 0;
+                left: 12px;
+                transform: none;
+                flex-wrap: wrap;
+                justify-content: center;
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <section class="panel topbar">
+            <div class="title-row">
+                <h1>Made With ❤️ by 0xAnsR <span class="title-version">v1.0</span></h1>
+            </div>
+            <p class="sub">Load MCQ CSV from local file or GitHub/CDN URL, then read questions with paging so the browser only renders the MCQs you want per view. Cached CSV and Urdu font stay available after refresh and during later offline visits.</p>
+
+            <div class="controls">
+                <div class="row">
+                    <label class="box">
+                        <span>Choose CSV</span>
+                        <input id="fileInput" type="file" accept=".csv">
+                    </label>
+
+                    <label class="box select-box">
+                        <span>Subject</span>
+                        <select id="subjectSelect">
+                            <option value="">Select Subject</option>
+                            <option value="https://raw.githubusercontent.com/0xAnsR/offlineTestpnt/main/imp2/computer-20260707-215154%20%2068%20mb/computer-20260707-215154%20%2068%20mb_mcqs.csv">Computer</option>
+                            <option value="https://raw.githubusercontent.com/0xAnsR/offlineTestpnt/main/imp2/english-20260624-230449/english-20260624-230449_mcqs.csv">English</option>
+                            <option value="https://raw.githubusercontent.com/0xAnsR/offlineTestpnt/main/imp2/general-knowledge-20260707-192905/general-knowledge-20260707-192905_mcqs.csv">General Knowledge</option>
+                            <option value="https://raw.githubusercontent.com/0xAnsR/offlineTestpnt/main/imp2/islamic-studies-20260708-000057/islamic-studies-20260708-000057_mcqs.csv">Islamic Studies</option>
+                            <option value="https://raw.githubusercontent.com/0xAnsR/offlineTestpnt/main/imp2/maths-mcqs-20260708-005741/maths-mcqs-20260708-005741_mcqs.csv">Maths MCQs</option>
+                            <option value="https://raw.githubusercontent.com/0xAnsR/offlineTestpnt/main/imp2/pak-study-20260708-015517/pak-study-20260708-015517_mcqs.csv">Pak Study</option>
+                            <option value="https://raw.githubusercontent.com/0xAnsR/offlineTestpnt/main/imp2/test/test_mcqs.csv">Test MCQs</option>
+                            <option value="https://raw.githubusercontent.com/0xAnsR/offlineTestpnt/main/imp2/test/test_mcqs_20260717_041216.csv">Test MCQs 041216</option>
+                            <option value="https://raw.githubusercontent.com/0xAnsR/offlineTestpnt/main/imp2/test/test_mcqs_20260717_041500.csv">Test MCQs 041500</option>
+                        </select>
+                    </label>
+
+                    <label class="box">
+                        <span>CSV URL</span>
+                        <input id="urlInput" type="url" placeholder="https://raw.githubusercontent.com/.../file.csv">
+                    </label>
+
+                    <button id="loadUrlBtn" type="button">Load From URL</button>
+                    <button id="sampleUrlBtn" type="button" class="secondary">Use Sample GitHub Raw URL</button>
+                </div>
+
+                <div class="row">
+                    <label class="box">
+                        <span>Search</span>
+                        <input id="searchInput" type="search" placeholder="Find question, option, explanation, or URL">
+                    </label>
+
+                    <label class="box select-box">
+                        <span>MCQs Per Page</span>
+                        <input id="perPageInput" type="number" min="25" value="25" step="1">
+                    </label>
+
+                    <label class="toggle">
+                        <input id="autoExplainWrong" type="checkbox" checked>
+                        <span>Explain Wrong Answers</span>
+                    </label>
+
+                    <label class="toggle">
+                        <input id="showExplanationDefault" type="checkbox">
+                        <span>Show All Explanations</span>
+                    </label>
+                </div>
+
+                <div class="meta" id="metaText">No CSV loaded.</div>
+
+                <div class="row page-status">
+                    <div id="pageStats" class="page-pill"><strong>0 / 0</strong></div>
+                    <div class="pager-nav">
+                        <button id="firstPageBtn" type="button" class="secondary" disabled>Home</button>
+                        <button id="prevPageBtn" type="button" class="secondary" disabled>Back</button>
+                        <label class="box select-box">
+                            <span>Go To Page</span>
+                            <select id="pageSelect" disabled></select>
+                        </label>
+                        <button id="nextPageBtn" type="button" disabled>Next</button>
+                        <button id="lastPageBtn" type="button" class="secondary" disabled>End</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="topbar-display-dock">
+                <div class="topbar-display-menu" id="displayMenu">
+                    <button id="ribbonAlwaysBtn" type="button" class="active">Always Show Ribbon</button>
+                    <button id="ribbonTabsBtn" type="button">Show Tabs Only</button>
+                    <button id="fullScreenBtn" type="button">Full Screen</button>
+                </div>
+                <button id="displayModeBtn" type="button" class="secondary topbar-display-btn">View</button>
+                <div class="topbar-grip">:::</div>
+            </div>
+
+        </section>
+
+        <div class="results" id="results"></div>
+        <div class="panel empty" id="emptyState">Load a CSV file or paste a GitHub raw/CDN CSV link to start the V3 viewer.</div>
+    </div>
+
+    <div class="cache-toast" id="cacheStatusText" aria-live="polite" aria-atomic="true"></div>
+
+    <div class="sticky-pager">
+        <div class="page-status">
+            <div id="stickyPageStats"><strong>0 / 0</strong></div>
+        </div>
+        <div class="pager-nav">
+            <button id="stickyFirstPageBtn" type="button" class="secondary" disabled>Home</button>
+            <button id="stickyPrevPageBtn" type="button" class="secondary" disabled>Back</button>
+            <label class="box select-box">
+                <span>Pg#</span>
+                <select id="stickyPageSelect" disabled></select>
+            </label>
+            <button id="stickyNextPageBtn" type="button" disabled>Next</button>
+            <button id="stickyLastPageBtn" type="button" class="secondary" disabled>End</button>
+        </div>
+        <label class="box select-box">
+            <span>Qty</span>
+            <input id="stickyPerPageInput" type="number" min="25" value="25" step="1">
+        </label>
+        <button id="refreshCacheBtn" type="button" class="cache-refresh-btn">Refresh</button>
+        </div>
+
+    <script>
+        const fileInput = document.getElementById("fileInput");
+        const topbar = document.querySelector(".topbar");
+        const subjectSelect = document.getElementById("subjectSelect");
+        const urlInput = document.getElementById("urlInput");
+        const loadUrlBtn = document.getElementById("loadUrlBtn");
+        const sampleUrlBtn = document.getElementById("sampleUrlBtn");
+        const searchInput = document.getElementById("searchInput");
+        const metaText = document.getElementById("metaText");
+        const autoExplainWrong = document.getElementById("autoExplainWrong");
+        const showExplanationDefault = document.getElementById("showExplanationDefault");
+        const perPageInput = document.getElementById("perPageInput");
+        const stickyPerPageInput = document.getElementById("stickyPerPageInput");
+        const pageStats = document.getElementById("pageStats");
+        const stickyPageStats = document.getElementById("stickyPageStats");
+        const firstPageBtn = document.getElementById("firstPageBtn");
+        const prevPageBtn = document.getElementById("prevPageBtn");
+        const nextPageBtn = document.getElementById("nextPageBtn");
+        const lastPageBtn = document.getElementById("lastPageBtn");
+        const pageSelect = document.getElementById("pageSelect");
+        const stickyFirstPageBtn = document.getElementById("stickyFirstPageBtn");
+        const stickyPrevPageBtn = document.getElementById("stickyPrevPageBtn");
+        const stickyNextPageBtn = document.getElementById("stickyNextPageBtn");
+        const stickyLastPageBtn = document.getElementById("stickyLastPageBtn");
+        const stickyPageSelect = document.getElementById("stickyPageSelect");
+        const results = document.getElementById("results");
+        const emptyState = document.getElementById("emptyState");
+        const displayModeBtn = document.getElementById("displayModeBtn");
+        const displayMenu = document.getElementById("displayMenu");
+        const ribbonAlwaysBtn = document.getElementById("ribbonAlwaysBtn");
+        const ribbonTabsBtn = document.getElementById("ribbonTabsBtn");
+        const fullScreenBtn = document.getElementById("fullScreenBtn");
+        const refreshCacheBtn = document.getElementById("refreshCacheBtn");
+        const cacheStatusText = document.getElementById("cacheStatusText");
+
+        const CACHE_DB_NAME = "csv-pages-v001-cache";
+        const CACHE_DB_VERSION = 1;
+        const CACHE_STORE = "assets";
+        const CSV_CACHE_INDEX_KEY = "csv-cache-index";
+        const FONT_CACHE_KEY = "noto-nastaliq-urdu-font";
+        const SETTINGS_KEY = "csv-pages-v001-settings";
+        const DEFAULT_FONT_CSS_URL = "https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400..700&display=swap";
+
+        let rows = [];
+        let filteredRows = [];
+        let sourceLabel = "";
+        let currentPage = 1;
+        let itemsPerPage = 25;
+        let cacheToastTimer = null;
+
+        function formatDateTime(value) {
+            if (!value) {
+                return "never";
+            }
+
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) {
+                return "never";
+            }
+
+            return date.toLocaleString();
+        }
+
+        function readSettings() {
+            try {
+                return JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
+            } catch (error) {
+                return {};
+            }
+        }
+
+        function writeSettings(nextSettings) {
+            localStorage.setItem(SETTINGS_KEY, JSON.stringify(nextSettings));
+        }
+
+        function updateCacheStatus(message) {
+            cacheStatusText.textContent = message;
+            cacheStatusText.classList.add("show");
+            if (cacheToastTimer) {
+                clearTimeout(cacheToastTimer);
+            }
+            cacheToastTimer = setTimeout(() => {
+                cacheStatusText.classList.remove("show");
+            }, 1600);
+        }
+
+        function makeCsvCacheKey(url, fallbackLabel = "") {
+            const normalizedUrl = String(url || "").trim();
+            if (normalizedUrl) {
+                return `csv-url:${normalizedUrl}`;
+            }
+            return `csv-file:${String(fallbackLabel || "manual-file").trim().toLowerCase()}`;
+        }
+
+        function openCacheDb() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(CACHE_DB_NAME, CACHE_DB_VERSION);
+                request.onerror = () => reject(request.error || new Error("IndexedDB open failed."));
+                request.onupgradeneeded = () => {
+                    const db = request.result;
+                    if (!db.objectStoreNames.contains(CACHE_STORE)) {
+                        db.createObjectStore(CACHE_STORE);
+                    }
+                };
+                request.onsuccess = () => resolve(request.result);
+            });
+        }
+
+        async function getCachedAsset(key) {
+            const db = await openCacheDb();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction(CACHE_STORE, "readonly");
+                const store = tx.objectStore(CACHE_STORE);
+                const request = store.get(key);
+                request.onerror = () => reject(request.error || new Error("IndexedDB read failed."));
+                request.onsuccess = () => resolve(request.result);
+            });
+        }
+
+        async function setCachedAsset(key, value) {
+            const db = await openCacheDb();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction(CACHE_STORE, "readwrite");
+                const store = tx.objectStore(CACHE_STORE);
+                const request = store.put(value, key);
+                request.onerror = () => reject(request.error || new Error("IndexedDB write failed."));
+                tx.oncomplete = () => resolve();
+            });
+        }
+
+        async function getCsvCacheIndex() {
+            return (await getCachedAsset(CSV_CACHE_INDEX_KEY)) || {};
+        }
+
+        async function setCsvCacheIndex(index) {
+            await setCachedAsset(CSV_CACHE_INDEX_KEY, index);
+        }
+
+        async function loadCachedFont() {
+            try {
+                const fontEntry = await getCachedAsset(FONT_CACHE_KEY);
+                if (!fontEntry || !fontEntry.blob) {
+                    return false;
+                }
+
+                const fontFace = new FontFace("Noto Nastaliq Urdu", fontEntry.blob);
+                await fontFace.load();
+                document.fonts.add(fontFace);
+                return true;
+            } catch (error) {
+                return false;
+            }
+        }
+
+        function extractFirstFontUrl(cssText) {
+            const match = String(cssText || "").match(/url\(([^)]+)\)/i);
+            if (!match) {
+                return "";
+            }
+            return match[1].replace(/^["']|["']$/g, "");
+        }
+
+        async function cacheFontFromNetwork() {
+            const cssResponse = await fetch(DEFAULT_FONT_CSS_URL, {
+                headers: {
+                    "Accept": "text/css"
+                }
+            });
+            if (!cssResponse.ok) {
+                throw new Error(`Font CSS HTTP ${cssResponse.status}`);
+            }
+
+            const cssText = await cssResponse.text();
+            const fontUrl = extractFirstFontUrl(cssText);
+            if (!fontUrl) {
+                throw new Error("Could not find font file URL.");
+            }
+
+            const fontResponse = await fetch(fontUrl);
+            if (!fontResponse.ok) {
+                throw new Error(`Font file HTTP ${fontResponse.status}`);
+            }
+
+            const fontBlob = await fontResponse.blob();
+            const savedAt = new Date().toISOString();
+            await setCachedAsset(FONT_CACHE_KEY, {
+                blob: fontBlob,
+                cssUrl: DEFAULT_FONT_CSS_URL,
+                fileUrl: fontUrl,
+                savedAt
+            });
+            await loadCachedFont();
+            return savedAt;
+        }
+
+        async function saveCsvCache(payload) {
+            const cacheKey = makeCsvCacheKey(payload.url, payload.label);
+            await setCachedAsset(cacheKey, payload);
+            const cacheIndex = await getCsvCacheIndex();
+            cacheIndex[cacheKey] = {
+                key: cacheKey,
+                label: payload.label || "",
+                url: payload.url || "",
+                sourceType: payload.sourceType || "url",
+                savedAt: payload.savedAt || ""
+            };
+            await setCsvCacheIndex(cacheIndex);
+            const settings = readSettings();
+            settings.lastCsvSavedAt = payload.savedAt || "";
+            settings.lastSourceLabel = payload.label || "";
+            settings.lastUrl = payload.url || "";
+            settings.lastSubjectUrl = payload.url || settings.lastSubjectUrl || "";
+            settings.lastCacheKey = cacheKey;
+            writeSettings(settings);
+        }
+
+        async function restoreCachedCsv(cacheKey = "") {
+            const settings = readSettings();
+            const resolvedKey = cacheKey || settings.lastCacheKey || "";
+            if (!resolvedKey) {
+                return false;
+            }
+
+            const cached = await getCachedAsset(resolvedKey);
+            if (!cached || !cached.text) {
+                return false;
+            }
+
+            if (cached.url) {
+                urlInput.value = cached.url;
+                subjectSelect.value = cached.url;
+            }
+
+            loadCsv(cached.text, `${cached.label || "Cached CSV"} (offline cache)`);
+            metaText.textContent = `Loaded offline cache from ${formatDateTime(cached.savedAt)}.`;
+            updateCacheStatus(`Offline cache ready. Last saved ${formatDateTime(cached.savedAt)}.`);
+            return true;
+        }
+
+        async function restoreCachedCsvByUrl(url) {
+            const cacheKey = makeCsvCacheKey(url);
+            return restoreCachedCsv(cacheKey);
+        }
+
+        async function persistCsvText(text, label, url = "", sourceType = "url") {
+            const savedAt = new Date().toISOString();
+            await saveCsvCache({
+                text,
+                label,
+                url,
+                sourceType,
+                savedAt
+            });
+            updateCacheStatus(`Offline cache ready. Last saved ${formatDateTime(savedAt)}.`);
+        }
+
+        async function fetchAndCacheCsv(url, triggerLabel) {
+            if (!url) {
+                throw new Error("Paste or select a CSV URL first.");
+            }
+
+            metaText.textContent = `${triggerLabel}: downloading CSV...`;
+            updateCacheStatus(`${triggerLabel}: updating CSV and font cache...`);
+
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
+            const text = await response.text();
+            loadCsv(text, url);
+            await persistCsvText(text, url, url, "url");
+
+            try {
+                const fontSavedAt = await cacheFontFromNetwork();
+                updateCacheStatus(`Offline cache ready. CSV + font saved ${formatDateTime(fontSavedAt)}.`);
+            } catch (fontError) {
+                updateCacheStatus(`CSV saved offline. Font update failed: ${fontError.message}`);
+            }
+        }
+
+        async function loadSubjectWithCachePreference(url) {
+            if (!url) {
+                metaText.textContent = "Select a subject first.";
+                return;
+            }
+
+            const settings = readSettings();
+            settings.lastSubjectUrl = url;
+            settings.lastUrl = url;
+            settings.lastCacheKey = makeCsvCacheKey(url);
+            writeSettings(settings);
+
+            const restored = await restoreCachedCsvByUrl(url);
+            if (restored) {
+                metaText.textContent = `Loaded saved offline copy for ${url}.`;
+                return;
+            }
+
+            try {
+                await fetchAndCacheCsv(url, "Subject Load");
+                metaText.textContent = `${url} downloaded and saved for lifetime offline use.`;
+            } catch (error) {
+                metaText.textContent = `Could not load ${url}. ${error.message}`;
+            }
+        }
+
+        function parseCsv(text) {
+            const out = [];
+            let row = [];
+            let value = "";
+            let inQuotes = false;
+
+            for (let i = 0; i < text.length; i += 1) {
+                const char = text[i];
+                const next = text[i + 1];
+
+                if (char === '"') {
+                    if (inQuotes && next === '"') {
+                        value += '"';
+                        i += 1;
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                    continue;
+                }
+
+                if (char === "," && !inQuotes) {
+                    row.push(value);
+                    value = "";
+                    continue;
+                }
+
+                if ((char === "\n" || char === "\r") && !inQuotes) {
+                    if (char === "\r" && next === "\n") {
+                        i += 1;
+                    }
+                    row.push(value);
+                    value = "";
+                    if (row.length > 1 || row[0] !== "") {
+                        out.push(row);
+                    }
+                    row = [];
+                    continue;
+                }
+
+                value += char;
+            }
+
+            if (value.length > 0 || row.length > 0) {
+                row.push(value);
+                out.push(row);
+            }
+
+            return out;
+        }
+
+        function normalizeText(value) {
+            return (value || "").replace(/\s+/g, " ").trim().toLowerCase();
+        }
+
+        function escapeHtml(value) {
+            return String(value || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        function makeRowObject(headers, values) {
+            const row = {};
+            headers.forEach((header, index) => {
+                row[header] = values[index] || "";
+            });
+            return row;
+        }
+
+        function getAnswerValue(row) {
+            return row.correct_answer || row.correct_option || "";
+        }
+
+        function makeVerifyLink(url) {
+            const safeUrl = String(url || "").trim();
+            if (!safeUrl) {
+                return "";
+            }
+
+            return `| <a href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer">Verify Online</a> |`;
+        }
+
+        function escapeRegex(value) {
+            return String(value || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        }
+
+        function formatExplanationText(text, correctAnswer) {
+            const rawText = String(text || "");
+            const answer = String(correctAnswer || "").trim();
+
+            if (!answer) {
+                return escapeHtml(rawText);
+            }
+
+            const pattern = new RegExp(`(${escapeRegex(answer)})`, "gi");
+            const parts = rawText.split(pattern);
+
+            return parts.map((part) => {
+                if (part.toLowerCase() === answer.toLowerCase()) {
+                    return `<span class="correct-answer-highlight">${escapeHtml(part)}</span>`;
+                }
+
+                return escapeHtml(part);
+            }).join("");
+        }
+
+        function optionCard(label, value, correctOption) {
+            return `
+                <div class="option" data-option="${label}">
+                    <span class="option-label">${label}</span>
+                    <span class="option-value">${escapeHtml(value)}</span>
+                </div>
+            `;
+        }
+
+        function getSrNumber(row, fallbackIndex) {
+            const srValue = String(row["SRn"] || row["SR#"] || "").trim();
+            if (srValue) {
+                return srValue;
+            }
+            return String(fallbackIndex + 1);
+        }
+
+        function renderCards(data, pageRows, totalPages) {
+            if (!data.length) {
+                results.innerHTML = "";
+                emptyState.classList.remove("hidden");
+                pageStats.innerHTML = "<strong>0 / 0</strong>";
+                firstPageBtn.disabled = true;
+                prevPageBtn.disabled = true;
+                nextPageBtn.disabled = true;
+                lastPageBtn.disabled = true;
+                pageSelect.innerHTML = "";
+                pageSelect.disabled = true;
+                return;
+            }
+
+            emptyState.classList.add("hidden");
+            pageStats.innerHTML = `<strong>${currentPage} / ${totalPages}</strong>`;
+            firstPageBtn.disabled = currentPage <= 1;
+            prevPageBtn.disabled = currentPage <= 1;
+            nextPageBtn.disabled = currentPage >= totalPages;
+            lastPageBtn.disabled = currentPage >= totalPages;
+            pageSelect.disabled = false;
+            pageSelect.innerHTML = Array.from({ length: totalPages }, (_, index) => {
+                const pageNumber = index + 1;
+                const selected = pageNumber === currentPage ? "selected" : "";
+                return `<option value="${pageNumber}" ${selected}>Page ${pageNumber}</option>`;
+            }).join("");
+
+            results.innerHTML = pageRows.map((row, index) => {
+                const absoluteIndex = ((currentPage - 1) * itemsPerPage) + index;
+                const correctOption = (row.correct_option || "").trim().toUpperCase();
+                const explanationText = row.explanation_text || row.additional_information || "";
+                const showExplanation = showExplanationDefault.checked;
+                const divider = index < pageRows.length - 1 ? '<hr class="mcq-divider">' : '';
+
+                return `
+                    <article class="panel mcq" data-index="${absoluteIndex}" data-correct-option="${escapeHtml(correctOption)}">
+                        <div class="mcq-head"></div>
+
+                        <div class="section">
+                            <div class="question-block">
+                                <div class="question-english">${escapeHtml(getSrNumber(row, absoluteIndex))}. ${escapeHtml(row.question_english || row.question || "")}</div>
+                                <div class="question-urdu" lang="ur" dir="rtl" style="font-family: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Jameel Noori', 'Urdu Typesetting', serif; font-optical-sizing: auto; font-weight: 400; font-style: normal;">${escapeHtml(getSrNumber(row, absoluteIndex))}. ${escapeHtml(row.question_urdu || "")}</div>
+                                <div class="mcq-meta">P:${escapeHtml(row.page_number || "")} | ID:${escapeHtml(row.mcq_id || "")} | C:${escapeHtml(row.category_name || "")} | SRC:${escapeHtml(row.main_category || "")} | ${makeVerifyLink(row.mcq_url || row.source_page_url || "")}</div>
+                            </div>
+                        </div>
+
+                        <div class="section">
+                            <div class="content-flow">
+                                <div class="options-grid">
+                                    ${optionCard("A", row.option_a || "", correctOption)}
+                                    ${optionCard("B", row.option_b || "", correctOption)}
+                                    ${optionCard("C", row.option_c || "", correctOption)}
+                                    ${optionCard("D", row.option_d || "", correctOption)}
+                                    <button type="button" class="mini-link toggle-explanation-btn">Toggle Explanation</button>
+                                </div>
+
+                                <div class="explanation-box ${showExplanation ? "" : "hidden"}">
+                                    <strong>Explanation:</strong>
+                                    <div>${formatExplanationText(explanationText || "No explanation available.", getAnswerValue(row))}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    ${divider}
+                `;
+            }).join("");
+        }
+
+        function renderCurrentView() {
+            const totalPages = Math.max(1, Math.ceil(filteredRows.length / itemsPerPage));
+            if (currentPage > totalPages) {
+                currentPage = totalPages;
+            }
+            if (currentPage < 1) {
+                currentPage = 1;
+            }
+
+            const start = (currentPage - 1) * itemsPerPage;
+            const pageRows = filteredRows.slice(start, start + itemsPerPage);
+            renderCards(filteredRows, pageRows, filteredRows.length ? totalPages : 0);
+            syncStickyPager(totalPages);
+        }
+
+        function syncStickyPager(totalPages) {
+            const safeTotalPages = filteredRows.length ? totalPages : 0;
+            stickyPageStats.innerHTML = `<strong>${safeTotalPages ? currentPage : 0} / ${safeTotalPages}</strong>`;
+            stickyFirstPageBtn.disabled = currentPage <= 1 || !safeTotalPages;
+            stickyPrevPageBtn.disabled = currentPage <= 1 || !safeTotalPages;
+            stickyNextPageBtn.disabled = currentPage >= safeTotalPages || !safeTotalPages;
+            stickyLastPageBtn.disabled = currentPage >= safeTotalPages || !safeTotalPages;
+            stickyPageSelect.disabled = !safeTotalPages;
+            stickyPageSelect.innerHTML = pageSelect.innerHTML;
+            if (!safeTotalPages) {
+                stickyPageSelect.innerHTML = "";
+            }
+        }
+
+        function applyFilter(resetPage = true) {
+            const term = normalizeText(searchInput.value);
+            if (!term) {
+                filteredRows = rows.slice();
+                if (resetPage) {
+                    currentPage = 1;
+                }
+                renderCurrentView();
+                metaText.textContent = `${sourceLabel} loaded with ${rows.length} rows.`;
+                return;
+            }
+
+            filteredRows = rows.filter((row) => {
+                return [
+                    row.mcq_id,
+                    row.main_category,
+                    row.category_name,
+                    row.question_english,
+                    row.question_urdu,
+                    row.question,
+                    row.option_a,
+                    row.option_b,
+                    row.option_c,
+                    row.option_d,
+                    row.correct_option,
+                    row.correct_answer,
+                    row.explanation_text,
+                    row.mcq_url,
+                    row.source_page_url
+                ].some((value) => normalizeText(value).includes(term));
+            });
+
+            if (resetPage) {
+                currentPage = 1;
+            }
+            renderCurrentView();
+            metaText.textContent = `${filteredRows.length} of ${rows.length} rows matched "${searchInput.value}".`;
+        }
+
+        function loadCsv(text, label) {
+            const parsed = parseCsv(text.replace(/^\uFEFF/, ""));
+            if (!parsed.length) {
+                rows = [];
+                sourceLabel = label;
+                renderCards(rows);
+                metaText.textContent = `${label} was empty.`;
+                return;
+            }
+
+            const headers = parsed[0];
+            rows = parsed.slice(1).map((values) => makeRowObject(headers, values));
+            sourceLabel = label;
+            searchInput.value = "";
+            filteredRows = rows.slice();
+            currentPage = 1;
+            itemsPerPage = Math.min(itemsPerPage, getMaxItemsPerPage());
+            syncPerPageControls(String(itemsPerPage));
+            renderCurrentView();
+            metaText.textContent = `${label} loaded with ${rows.length} rows.`;
+        }
+
+        function getMaxItemsPerPage() {
+            return Math.max(25, rows.length || 25);
+        }
+
+        function syncPerPageControls(value) {
+            const maxValue = String(getMaxItemsPerPage());
+            perPageInput.max = maxValue;
+            stickyPerPageInput.max = maxValue;
+            perPageInput.value = value;
+            stickyPerPageInput.value = value;
+        }
+
+        function updateItemsPerPage(value) {
+            const parsedValue = Number.parseInt(value, 10);
+            const requestedValue = Number.isFinite(parsedValue) ? parsedValue : 25;
+            itemsPerPage = Math.min(getMaxItemsPerPage(), Math.max(25, requestedValue));
+            syncPerPageControls(String(itemsPerPage));
+            currentPage = 1;
+            renderCurrentView();
+        }
+
+        async function loadCsvFromUrl() {
+            const url = urlInput.value.trim();
+            if (!url) {
+                metaText.textContent = "Paste a CSV URL first.";
+                return;
+            }
+
+            try {
+                await fetchAndCacheCsv(url, "Load From URL");
+                metaText.textContent = `${url} loaded and saved for offline use.`;
+            } catch (error) {
+                const cached = await getCachedAsset(makeCsvCacheKey(url));
+                if (cached && cached.text) {
+                    loadCsv(cached.text, `${cached.label || "Cached CSV"} (offline cache)`);
+                    metaText.textContent = `Could not load CSV from URL. Using saved offline copy instead. ${error.message}`;
+                    updateCacheStatus(`Offline cache fallback loaded. Last saved ${formatDateTime(cached.savedAt)}.`);
+                    return;
+                }
+
+                metaText.textContent = `Could not load CSV from URL. ${error.message}`;
+            }
+        }
+
+        function setRibbonMode(mode) {
+            topbar.dataset.ribbonMode = mode;
+            ribbonAlwaysBtn.classList.toggle("active", mode === "always");
+            ribbonTabsBtn.classList.toggle("active", mode === "tabs-only");
+            displayModeBtn.textContent = mode === "tabs-only" ? "Tabs" : "View";
+            displayMenu.classList.remove("open");
+        }
+
+        async function toggleFullScreen() {
+            displayMenu.classList.remove("open");
+            if (!document.fullscreenElement) {
+                await document.documentElement.requestFullscreen();
+                return;
+            }
+            await document.exitFullscreen();
+        }
+
+        fileInput.addEventListener("change", async (event) => {
+            const file = event.target.files[0];
+            if (!file) {
+                return;
+            }
+
+            const text = await file.text();
+            loadCsv(text, file.name);
+            await persistCsvText(text, file.name, "", "file");
+            metaText.textContent = `${file.name} loaded and saved for offline use.`;
+        });
+
+        loadUrlBtn.addEventListener("click", loadCsvFromUrl);
+
+        sampleUrlBtn.addEventListener("click", () => {
+            urlInput.value = "https://raw.githubusercontent.com/0xAnsR/offlineTestpnt/main/imp2/test/test_mcqs_20260717_041216.csv";
+            subjectSelect.value = urlInput.value;
+            const settings = readSettings();
+            settings.lastSubjectUrl = urlInput.value;
+            writeSettings(settings);
+            metaText.textContent = "Sample GitHub raw URL inserted. Click Load From URL or Refresh Cache to download and save it.";
+        });
+
+        subjectSelect.addEventListener("change", async (event) => {
+            const selectedUrl = event.target.value;
+            if (!selectedUrl) {
+                return;
+            }
+
+            urlInput.value = selectedUrl;
+            await loadSubjectWithCachePreference(selectedUrl);
+        });
+        refreshCacheBtn.addEventListener("click", async () => {
+            const selectedUrl = urlInput.value.trim() || subjectSelect.value.trim();
+            if (!selectedUrl) {
+                metaText.textContent = "Select a subject or paste a CSV URL first.";
+                return;
+            }
+
+            try {
+                await fetchAndCacheCsv(selectedUrl, "Refresh Cache");
+                metaText.textContent = `Cache refreshed from ${selectedUrl}.`;
+            } catch (error) {
+                metaText.textContent = `Refresh failed. ${error.message}`;
+            }
+        });
+        displayModeBtn.addEventListener("click", () => {
+            displayMenu.classList.toggle("open");
+        });
+        ribbonAlwaysBtn.addEventListener("click", () => {
+            setRibbonMode("always");
+        });
+        ribbonTabsBtn.addEventListener("click", () => {
+            setRibbonMode("tabs-only");
+        });
+        fullScreenBtn.addEventListener("click", async () => {
+            await toggleFullScreen();
+        });
+        document.addEventListener("click", (event) => {
+            if (!event.target.closest(".topbar-display-dock")) {
+                displayMenu.classList.remove("open");
+            }
+        });
+
+        searchInput.addEventListener("input", applyFilter);
+        perPageInput.addEventListener("change", (event) => updateItemsPerPage(event.target.value));
+        stickyPerPageInput.addEventListener("change", (event) => updateItemsPerPage(event.target.value));
+        perPageInput.addEventListener("input", (event) => {
+            stickyPerPageInput.value = event.target.value;
+        });
+        stickyPerPageInput.addEventListener("input", (event) => {
+            perPageInput.value = event.target.value;
+        });
+        firstPageBtn.addEventListener("click", () => {
+            currentPage = 1;
+            renderCurrentView();
+        });
+        prevPageBtn.addEventListener("click", () => {
+            if (currentPage > 1) {
+                currentPage -= 1;
+                renderCurrentView();
+            }
+        });
+        stickyFirstPageBtn.addEventListener("click", () => {
+            currentPage = 1;
+            renderCurrentView();
+        });
+        stickyPrevPageBtn.addEventListener("click", () => {
+            if (currentPage > 1) {
+                currentPage -= 1;
+                renderCurrentView();
+            }
+        });
+        nextPageBtn.addEventListener("click", () => {
+            const totalPages = Math.max(1, Math.ceil(filteredRows.length / itemsPerPage));
+            if (currentPage < totalPages) {
+                currentPage += 1;
+                renderCurrentView();
+            }
+        });
+        lastPageBtn.addEventListener("click", () => {
+            currentPage = Math.max(1, Math.ceil(filteredRows.length / itemsPerPage));
+            renderCurrentView();
+        });
+        stickyNextPageBtn.addEventListener("click", () => {
+            const totalPages = Math.max(1, Math.ceil(filteredRows.length / itemsPerPage));
+            if (currentPage < totalPages) {
+                currentPage += 1;
+                renderCurrentView();
+            }
+        });
+        stickyLastPageBtn.addEventListener("click", () => {
+            currentPage = Math.max(1, Math.ceil(filteredRows.length / itemsPerPage));
+            renderCurrentView();
+        });
+        pageSelect.addEventListener("change", (event) => {
+            currentPage = Number.parseInt(event.target.value, 10) || 1;
+            renderCurrentView();
+        });
+        stickyPageSelect.addEventListener("change", (event) => {
+            currentPage = Number.parseInt(event.target.value, 10) || 1;
+            renderCurrentView();
+        });
+
+        results.addEventListener("click", (event) => {
+            const card = event.target.closest(".mcq");
+            if (!card) {
+                return;
+            }
+
+            const option = event.target.closest(".option");
+            if (option) {
+                const selectedLabel = option.dataset.option || "";
+                const correctLabel = card.dataset.correctOption || "";
+
+                card.querySelectorAll(".option").forEach((item) => {
+                    item.classList.remove("selected", "wrong-pick", "correct-reveal");
+                });
+
+                option.classList.add("selected");
+
+                const correctOptionCard = card.querySelector(`.option[data-option="${correctLabel}"]`);
+                if (correctOptionCard) {
+                    correctOptionCard.classList.add("correct-reveal");
+                }
+
+                if (selectedLabel && correctLabel && selectedLabel !== correctLabel) {
+                    option.classList.add("wrong-pick");
+
+                    const explanationBox = card.querySelector(".explanation-box");
+                    if (autoExplainWrong.checked && explanationBox) {
+                        explanationBox.classList.remove("hidden");
+                    }
+                }
+
+                return;
+            }
+
+            if (event.target.classList.contains("toggle-explanation-btn")) {
+                const explanationBox = card.querySelector(".explanation-box");
+                explanationBox.classList.toggle("hidden");
+            }
+        });
+
+        autoExplainWrong.addEventListener("change", applyFilter);
+        showExplanationDefault.addEventListener("change", applyFilter);
+        syncPerPageControls("25");
+        setRibbonMode("always");
+
+        (async () => {
+            const settings = readSettings();
+            if (settings.lastSubjectUrl) {
+                urlInput.value = settings.lastSubjectUrl;
+                subjectSelect.value = settings.lastSubjectUrl;
+            }
+
+            const cachedFontReady = await loadCachedFont();
+            const cachedCsvReady = await restoreCachedCsv(settings.lastCacheKey || "");
+
+            if (!cachedCsvReady) {
+                updateCacheStatus(cachedFontReady ? "Font cache ready. No offline CSV cache yet." : "No offline cache yet.");
+            } else if (cachedFontReady) {
+                const latestSettings = readSettings();
+                updateCacheStatus(`Offline CSV + font cache ready. Last CSV save ${formatDateTime(latestSettings.lastCsvSavedAt)}.`);
+            }
+        })();
+    </script>
+</body>
+</html>
