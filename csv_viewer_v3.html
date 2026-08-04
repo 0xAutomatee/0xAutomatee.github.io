@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Viewer V3</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400..700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f3ede3;
+            --panel: #fffdf9;
+            --line: #dfd1be;
+            --text: #261d13;
+            --muted: #776957;
+            --accent: #8f5a23;
+            --accent-soft: #f6e7d2;
+            --ok-bg: #edf8f1;
+            --ok-line: #b8dec5;
+            --ok-text: #245b41;
+            --info-bg: #f9f3ea;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            font-size: 16px;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top right, rgba(241, 203, 151, 0.6), transparent 26%),
+                linear-gradient(180deg, #eee3d3 0%, #f8f5ef 100%);
+        }
+
+        .wrap {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06);
+        }
+
+        .topbar {
+            padding: 20px;
+        }
+
+        h1, h2, h3, p {
+            margin-top: 0;
+        }
+
+        h1 {
+            margin-bottom: 6px;
+            font-size: clamp(1.9rem, 1.35rem + 1.6vw, 2.5rem);
+            line-height: 1.08;
+            letter-spacing: -0.03em;
+        }
+
+        .sub {
+            color: var(--muted);
+            margin-bottom: 18px;
+            font-size: 1rem;
+            line-height: 1.65;
+        }
+
+        .controls {
+            display: grid;
+            gap: 12px;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .box,
+        .toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--accent-soft);
+            border: 1px solid #e6cfb0;
+            border-radius: 14px;
+            padding: 11px 14px;
+        }
+
+        .box input[type="search"],
+        .box input[type="url"] {
+            min-width: 280px;
+            border: 0;
+            outline: none;
+            background: transparent;
+            color: var(--text);
+            font-size: 0.98rem;
+        }
+
+        .toggle input {
+            accent-color: var(--accent);
+        }
+
+        .box span,
+        .toggle span {
+            font-size: 0.94rem;
+            line-height: 1.4;
+        }
+
+        button {
+            border: 0;
+            border-radius: 12px;
+            padding: 12px 16px;
+            background: var(--accent);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.95rem;
+            line-height: 1.2;
+            letter-spacing: 0.01em;
+            cursor: pointer;
+        }
+
+        button.secondary {
+            background: #e7d3b7;
+            color: #5b3a17;
+        }
+
+        .meta {
+            color: var(--muted);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .structure {
+            margin-top: 18px;
+            padding: 18px 20px;
+            background: var(--info-bg);
+            border-top: 1px solid var(--line);
+        }
+
+        .structure h2 {
+            margin-bottom: 12px;
+            font-size: 1.15rem;
+            line-height: 1.3;
+        }
+
+        .tree {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.92rem;
+            white-space: pre-wrap;
+            line-height: 1.7;
+            color: #4a3825;
+        }
+
+        .results {
+            margin-top: 18px;
+            display: grid;
+            gap: 26px;
+        }
+
+        .empty {
+            padding: 36px 20px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 1rem;
+            line-height: 1.65;
+        }
+
+        .mcq {
+            overflow: hidden;
+            width: min(100%, 210mm);
+            margin: 0 auto;
+            border-radius: 8px;
+            box-shadow: 0 12px 30px rgba(71, 48, 23, 0.08);
+        }
+
+        .mcq-head {
+            display: none;
+        }
+
+        .chip {
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: #fff8ef;
+            border: 1px solid #eadcca;
+            color: var(--muted);
+            font-size: 0.78rem;
+            line-height: 1.2;
+            letter-spacing: 0.01em;
+        }
+
+        .mcq-foot {
+            display: flex;
+            justify-content: flex-end;
+            padding: 0 26px 16px;
+        }
+
+        .mcq-meta {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 8px;
+            max-width: 100%;
+        }
+
+        .section {
+            padding: 14px 26px;
+            border-bottom: 1px solid #e7dccf;
+            font-size: 0.82rem;
+            line-height: 1.32;
+        }
+
+        .question-block {
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            padding: 0;
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+        }
+
+        .content-flow {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 100%;
+            gap: 6px;
+        }
+
+        .question-english {
+            font-size: 0.96rem;
+            font-weight: 700;
+            line-height: 1.12;
+            letter-spacing: 0;
+            margin-bottom: 4px;
+        }
+
+        .question-urdu {
+            direction: rtl;
+            text-align: right;
+            font-family: "Noto Nastaliq Urdu", "Jameel Noori Nastaleeq", "Jameel Noori", "Urdu Typesetting", serif !important;
+            font-optical-sizing: auto;
+            font-weight: 400;
+            font-style: normal;
+            font-size: 1rem;
+            line-height: 1.28;
+            color: #3c2d1f;
+            margin-bottom: 2px;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 10px;
+            width: 100%;
+            max-width: 100%;
+            align-items: flex-start;
+        }
+
+        .option {
+            display: inline-flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 2px 0;
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+            width: auto;
+            max-width: min(100%, 320px);
+            margin-right: 14px;
+            cursor: pointer;
+        }
+
+        .option.correct-mark {
+            background: transparent;
+            border-color: transparent;
+        }
+
+        .option.selected .option-label {
+            color: #8f5a23;
+            text-decoration: underline;
+        }
+
+        .option.correct-reveal .option-label,
+        .option.correct-reveal .option-value {
+            color: #c1121f;
+            font-weight: 700;
+        }
+
+        .option.wrong-pick .option-label,
+        .option.wrong-pick .option-value {
+            color: #6c757d;
+        }
+
+        .option-label {
+            width: 24px;
+            height: auto;
+            border-radius: 0;
+            display: inline-flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+            background: transparent;
+            color: #4b3620;
+            font-weight: 700;
+            font-size: 0.82rem;
+            flex: 0 0 auto;
+        }
+
+        .option.correct-mark .option-label {
+            background: transparent;
+            color: var(--ok-text);
+        }
+
+        .option-value {
+            font-size: 0.84rem;
+            line-height: 1.22;
+            word-break: break-word;
+        }
+
+        .explanation-box {
+            margin-top: 4px;
+            border-radius: 6px;
+            padding: 8px 10px;
+            font-size: 0.8rem;
+            line-height: 1.28;
+        }
+
+        .explanation-box {
+            background: #fff8ef;
+            border: 1px solid #eadbc6;
+            width: fit-content;
+            max-width: 100%;
+        }
+
+        .footer-link {
+            font-size: 0.74rem;
+            line-height: 1.18;
+            color: var(--muted);
+            word-break: break-all;
+            margin-top: 4px;
+        }
+
+        .footer-link a {
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 0.76rem;
+            text-decoration: none;
+        }
+
+        .footer-link a:hover {
+            text-decoration: underline;
+        }
+
+        .mini-link {
+            display: inline;
+            border: 0;
+            padding: 0;
+            margin: 0;
+            background: transparent;
+            color: var(--accent);
+            font: inherit;
+            font-size: 0.76rem;
+            font-weight: 700;
+            line-height: 1.2;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .mini-link:hover {
+            text-decoration: underline;
+        }
+
+        .correct-answer-highlight {
+            color: #c1121f;
+            font-style: italic;
+            font-weight: 700;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 760px) {
+            .wrap {
+                padding: 12px;
+            }
+
+            .topbar,
+            .section,
+            .structure {
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+
+            .box input[type="search"],
+            .box input[type="url"] {
+                min-width: 180px;
+                width: 100%;
+            }
+
+            .row {
+                align-items: stretch;
+            }
+
+            .chip {
+                font-size: 0.74rem;
+            }
+
+            .mcq-foot {
+                justify-content: flex-start;
+                padding: 0 14px 10px;
+            }
+
+            .mcq-meta {
+                justify-content: flex-start;
+            }
+
+            .question-english {
+                font-size: 0.9rem;
+                line-height: 1.1;
+            }
+
+            .question-urdu {
+                font-size: 0.92rem;
+                line-height: 1.24;
+            }
+
+            .option-value,
+            .explanation-box {
+                font-size: 0.8rem;
+            }
+
+            .section {
+                font-size: 0.8rem;
+                line-height: 1.24;
+            }
+
+            .footer-link,
+            .footer-link a,
+            .mini-link {
+                font-size: 0.72rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <section class="panel topbar">
+            <h1>CSV Viewer V3</h1>
+            <p class="sub">Load MCQ CSV from local file or GitHub/CDN URL, then read questions with answer and explanation controls.</p>
+
+            <div class="controls">
+                <div class="row">
+                    <label class="box">
+                        <span>Choose CSV</span>
+                        <input id="fileInput" type="file" accept=".csv">
+                    </label>
+
+                    <label class="box">
+                        <span>CSV URL</span>
+                        <input id="urlInput" type="url" placeholder="https://raw.githubusercontent.com/.../file.csv">
+                    </label>
+
+                    <button id="loadUrlBtn" type="button">Load From URL</button>
+                    <button id="sampleUrlBtn" type="button" class="secondary">Use Sample GitHub Raw URL</button>
+                </div>
+
+                <div class="row">
+                    <label class="box">
+                        <span>Search</span>
+                        <input id="searchInput" type="search" placeholder="Find question, option, explanation, or URL">
+                    </label>
+                </div>
+
+                <div class="row">
+                    <label class="toggle">
+                        <input id="autoExplainWrong" type="checkbox" checked>
+                        <span>Auto show explanation on wrong answer</span>
+                    </label>
+
+                    <label class="toggle">
+                        <input id="showExplanationDefault" type="checkbox">
+                        <span>C. Show explanation of each MCQ by default</span>
+                    </label>
+                </div>
+
+                <div class="meta" id="metaText">No CSV loaded.</div>
+            </div>
+
+            <div class="structure">
+                <h2>Final Extraction Structure</h2>
+                <div class="tree">A
+|-- B1
+|   |-- question_english
+|   `-- question_urdu
+|
+|-- B2
+|   |-- option_a
+|   |-- option_b
+|   |-- option_c
+|   |-- option_d
+|   `-- correct_option
+|
+`-- B3
+    `-- explanation_text</div>
+            </div>
+        </section>
+
+        <div class="results" id="results"></div>
+        <div class="panel empty" id="emptyState">Load a CSV file or paste a GitHub raw/CDN CSV link to start the V3 viewer.</div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById("fileInput");
+        const urlInput = document.getElementById("urlInput");
+        const loadUrlBtn = document.getElementById("loadUrlBtn");
+        const sampleUrlBtn = document.getElementById("sampleUrlBtn");
+        const searchInput = document.getElementById("searchInput");
+        const metaText = document.getElementById("metaText");
+        const autoExplainWrong = document.getElementById("autoExplainWrong");
+        const showExplanationDefault = document.getElementById("showExplanationDefault");
+        const results = document.getElementById("results");
+        const emptyState = document.getElementById("emptyState");
+
+        let rows = [];
+        let sourceLabel = "";
+
+        function parseCsv(text) {
+            const out = [];
+            let row = [];
+            let value = "";
+            let inQuotes = false;
+
+            for (let i = 0; i < text.length; i += 1) {
+                const char = text[i];
+                const next = text[i + 1];
+
+                if (char === '"') {
+                    if (inQuotes && next === '"') {
+                        value += '"';
+                        i += 1;
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                    continue;
+                }
+
+                if (char === "," && !inQuotes) {
+                    row.push(value);
+                    value = "";
+                    continue;
+                }
+
+                if ((char === "\n" || char === "\r") && !inQuotes) {
+                    if (char === "\r" && next === "\n") {
+                        i += 1;
+                    }
+                    row.push(value);
+                    value = "";
+                    if (row.length > 1 || row[0] !== "") {
+                        out.push(row);
+                    }
+                    row = [];
+                    continue;
+                }
+
+                value += char;
+            }
+
+            if (value.length > 0 || row.length > 0) {
+                row.push(value);
+                out.push(row);
+            }
+
+            return out;
+        }
+
+        function normalizeText(value) {
+            return (value || "").replace(/\s+/g, " ").trim().toLowerCase();
+        }
+
+        function escapeHtml(value) {
+            return String(value || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        function makeRowObject(headers, values) {
+            const row = {};
+            headers.forEach((header, index) => {
+                row[header] = values[index] || "";
+            });
+            return row;
+        }
+
+        function getAnswerValue(row) {
+            return row.correct_answer || row.correct_option || "";
+        }
+
+        function makeVerifyLink(url) {
+            const safeUrl = String(url || "").trim();
+            if (!safeUrl) {
+                return "";
+            }
+
+            return `<a href="${escapeHtml(safeUrl)}" target="_blank" rel="noopener noreferrer">Verify Online</a>`;
+        }
+
+        function escapeRegex(value) {
+            return String(value || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        }
+
+        function formatExplanationText(text, correctAnswer) {
+            const rawText = String(text || "");
+            const answer = String(correctAnswer || "").trim();
+
+            if (!answer) {
+                return escapeHtml(rawText);
+            }
+
+            const pattern = new RegExp(`(${escapeRegex(answer)})`, "gi");
+            const parts = rawText.split(pattern);
+
+            return parts.map((part) => {
+                if (part.toLowerCase() === answer.toLowerCase()) {
+                    return `<span class="correct-answer-highlight">${escapeHtml(part)}</span>`;
+                }
+
+                return escapeHtml(part);
+            }).join("");
+        }
+
+        function optionCard(label, value, correctOption) {
+            return `
+                <div class="option" data-option="${label}">
+                    <span class="option-label">${label}</span>
+                    <span class="option-value">${escapeHtml(value)}</span>
+                </div>
+            `;
+        }
+
+        function renderCards(data) {
+            if (!data.length) {
+                results.innerHTML = "";
+                emptyState.classList.remove("hidden");
+                return;
+            }
+
+            emptyState.classList.add("hidden");
+            results.innerHTML = data.map((row, index) => {
+                const correctOption = (row.correct_option || "").trim().toUpperCase();
+                const explanationText = row.explanation_text || row.additional_information || "";
+                const showExplanation = showExplanationDefault.checked;
+
+                return `
+                    <article class="panel mcq" data-index="${index}" data-correct-option="${escapeHtml(correctOption)}">
+                        <div class="mcq-head"></div>
+
+                        <div class="section">
+                            <div class="question-block">
+                                <div class="question-english">${escapeHtml(row.question_english || row.question || "")}</div>
+                                <div class="question-urdu" lang="ur" dir="rtl" style="font-family: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Jameel Noori', 'Urdu Typesetting', serif; font-optical-sizing: auto; font-weight: 400; font-style: normal;">${escapeHtml(row.question_urdu || "")}</div>
+                            </div>
+                            <div class="footer-link">${makeVerifyLink(row.mcq_url || row.source_page_url || "")}</div>
+                        </div>
+
+                        <div class="section">
+                            <div class="content-flow">
+                                <div class="options-grid">
+                                    ${optionCard("A", row.option_a || "", correctOption)}
+                                    ${optionCard("B", row.option_b || "", correctOption)}
+                                    ${optionCard("C", row.option_c || "", correctOption)}
+                                    ${optionCard("D", row.option_d || "", correctOption)}
+                                    <button type="button" class="mini-link toggle-explanation-btn">Toggle Explanation</button>
+                                </div>
+
+                                <div class="explanation-box ${showExplanation ? "" : "hidden"}">
+                                    <strong>Explanation:</strong>
+                                    <div>${formatExplanationText(explanationText || "No explanation available.", getAnswerValue(row))}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mcq-foot">
+                            <div class="mcq-meta">
+                                <span class="chip">P:${escapeHtml(row.page_number || "")}</span>
+                                <span class="chip">ID:${escapeHtml(row.mcq_id || "")}</span>
+                                <span class="chip">C:${escapeHtml(row.category_name || "")}</span>
+                                <span class="chip">SRC:${escapeHtml(row.main_category || "")}</span>
+                            </div>
+                        </div>
+                    </article>
+                `;
+            }).join("");
+        }
+
+        function applyFilter() {
+            const term = normalizeText(searchInput.value);
+            if (!term) {
+                renderCards(rows);
+                metaText.textContent = `${sourceLabel} loaded with ${rows.length} rows.`;
+                return;
+            }
+
+            const filtered = rows.filter((row) => {
+                return [
+                    row.mcq_id,
+                    row.main_category,
+                    row.category_name,
+                    row.question_english,
+                    row.question_urdu,
+                    row.question,
+                    row.option_a,
+                    row.option_b,
+                    row.option_c,
+                    row.option_d,
+                    row.correct_option,
+                    row.correct_answer,
+                    row.explanation_text,
+                    row.mcq_url,
+                    row.source_page_url
+                ].some((value) => normalizeText(value).includes(term));
+            });
+
+            renderCards(filtered);
+            metaText.textContent = `${filtered.length} of ${rows.length} rows matched "${searchInput.value}".`;
+        }
+
+        function loadCsv(text, label) {
+            const parsed = parseCsv(text.replace(/^\uFEFF/, ""));
+            if (!parsed.length) {
+                rows = [];
+                sourceLabel = label;
+                renderCards(rows);
+                metaText.textContent = `${label} was empty.`;
+                return;
+            }
+
+            const headers = parsed[0];
+            rows = parsed.slice(1).map((values) => makeRowObject(headers, values));
+            sourceLabel = label;
+            searchInput.value = "";
+            renderCards(rows);
+            metaText.textContent = `${label} loaded with ${rows.length} rows.`;
+        }
+
+        async function loadCsvFromUrl() {
+            const url = urlInput.value.trim();
+            if (!url) {
+                metaText.textContent = "Paste a CSV URL first.";
+                return;
+            }
+
+            metaText.textContent = `Loading CSV from ${url} ...`;
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const text = await response.text();
+                loadCsv(text, url);
+            } catch (error) {
+                metaText.textContent = `Could not load CSV from URL. ${error.message}`;
+            }
+        }
+
+        fileInput.addEventListener("change", async (event) => {
+            const file = event.target.files[0];
+            if (!file) {
+                return;
+            }
+
+            const text = await file.text();
+            loadCsv(text, file.name);
+        });
+
+        loadUrlBtn.addEventListener("click", loadCsvFromUrl);
+
+        sampleUrlBtn.addEventListener("click", () => {
+            urlInput.value = "https://raw.githubusercontent.com/user/repo/main/test_mcqs.csv";
+            metaText.textContent = "Sample GitHub raw URL inserted. Replace it with your real CSV link and click Load From URL.";
+        });
+
+        searchInput.addEventListener("input", applyFilter);
+
+        results.addEventListener("click", (event) => {
+            const card = event.target.closest(".mcq");
+            if (!card) {
+                return;
+            }
+
+            const option = event.target.closest(".option");
+            if (option) {
+                const selectedLabel = option.dataset.option || "";
+                const correctLabel = card.dataset.correctOption || "";
+
+                card.querySelectorAll(".option").forEach((item) => {
+                    item.classList.remove("selected", "wrong-pick", "correct-reveal");
+                });
+
+                option.classList.add("selected");
+
+                const correctOptionCard = card.querySelector(`.option[data-option="${correctLabel}"]`);
+                if (correctOptionCard) {
+                    correctOptionCard.classList.add("correct-reveal");
+                }
+
+                if (selectedLabel && correctLabel && selectedLabel !== correctLabel) {
+                    option.classList.add("wrong-pick");
+
+                    const explanationBox = card.querySelector(".explanation-box");
+                    if (autoExplainWrong.checked && explanationBox) {
+                        explanationBox.classList.remove("hidden");
+                    }
+                }
+
+                return;
+            }
+
+            if (event.target.classList.contains("toggle-explanation-btn")) {
+                const explanationBox = card.querySelector(".explanation-box");
+                explanationBox.classList.toggle("hidden");
+            }
+        });
+
+        autoExplainWrong.addEventListener("change", applyFilter);
+        showExplanationDefault.addEventListener("change", applyFilter);
+    </script>
+</body>
+</html>

@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV View Version 02</title>
+    <style>
+        :root {
+            --bg: #f4efe6;
+            --panel: #fffdfa;
+            --line: #dccfbe;
+            --text: #231c14;
+            --muted: #756757;
+            --accent: #8a5a2c;
+            --accent-soft: #f8e9d6;
+            --ok: #2d6a4f;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top right, #f7dcb6 0%, transparent 28%),
+                linear-gradient(180deg, #efe6d7 0%, #f7f4ee 100%);
+        }
+
+        .wrap {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .topbar {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 18px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06);
+        }
+
+        h1 {
+            margin: 0 0 6px;
+            font-size: 28px;
+        }
+
+        .sub {
+            margin: 0 0 16px;
+            color: var(--muted);
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .picker,
+        .search {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--accent-soft);
+            border: 1px solid #e6cfb0;
+            border-radius: 12px;
+            padding: 10px 14px;
+        }
+
+        .search input {
+            border: 0;
+            background: transparent;
+            outline: none;
+            min-width: 240px;
+            color: var(--text);
+        }
+
+        .meta {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .results {
+            margin-top: 18px;
+            display: grid;
+            gap: 18px;
+        }
+
+        .mcq-container {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        .mcq-head {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 14px 18px;
+            background: #faf1e5;
+            border-bottom: 1px solid var(--line);
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .chip {
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: #fff8ef;
+            border: 1px solid #eadcca;
+        }
+
+        .question-section {
+            padding: 18px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .question-english {
+            font-size: 21px;
+            font-weight: 700;
+            line-height: 1.45;
+            margin-bottom: 12px;
+        }
+
+        .question-urdu {
+            direction: rtl;
+            text-align: right;
+            font-family: "Jameel Noori Nastaleeq", "Noto Nastaliq Urdu", "Urdu Typesetting", serif;
+            font-size: 28px;
+            line-height: 1.9;
+            color: #35271b;
+        }
+
+        .options-section {
+            padding: 18px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 12px;
+        }
+
+        .option {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            border: 1px solid #e6dccf;
+            border-radius: 14px;
+            background: #fffdfa;
+            padding: 14px;
+        }
+
+        .option-label {
+            min-width: 34px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #f3e1cb;
+            color: #6e451d;
+            font-weight: 700;
+        }
+
+        .option-value {
+            line-height: 1.5;
+        }
+
+        .option.correct {
+            background: #eff9f3;
+            border-color: #b9ddc8;
+        }
+
+        .option.correct .option-label {
+            background: #2d6a4f;
+            color: white;
+        }
+
+        .correct-option {
+            margin-top: 16px;
+            padding: 14px 16px;
+            border-radius: 14px;
+            background: #f3fbf6;
+            border: 1px solid #cbe8d6;
+            color: var(--ok);
+            font-weight: 700;
+        }
+
+        .field-name {
+            opacity: 0.8;
+            margin-right: 6px;
+        }
+
+        .empty {
+            margin-top: 18px;
+            background: var(--panel);
+            border: 1px dashed var(--line);
+            border-radius: 20px;
+            padding: 36px 20px;
+            text-align: center;
+            color: var(--muted);
+        }
+
+        .foot {
+            margin-top: 8px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="topbar">
+            <h1>CSV View Version 02</h1>
+            <p class="sub">A card-based reader for MCQs using question and option columns from the CSV.</p>
+
+            <div class="controls">
+                <label class="picker">
+                    <span>Choose CSV</span>
+                    <input id="fileInput" type="file" accept=".csv">
+                </label>
+
+                <label class="search">
+                    <span>Search</span>
+                    <input id="searchInput" type="search" placeholder="Find question, option, or URL">
+                </label>
+
+                <div class="meta" id="metaText">No CSV loaded.</div>
+            </div>
+        </div>
+
+        <div class="empty" id="emptyState">
+            Select a CSV file to render MCQs using the Version 02 layout.
+        </div>
+
+        <div class="results" id="results"></div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById("fileInput");
+        const searchInput = document.getElementById("searchInput");
+        const metaText = document.getElementById("metaText");
+        const results = document.getElementById("results");
+        const emptyState = document.getElementById("emptyState");
+
+        let rows = [];
+
+        function parseCsv(text) {
+            const out = [];
+            let row = [];
+            let value = "";
+            let inQuotes = false;
+
+            for (let i = 0; i < text.length; i += 1) {
+                const char = text[i];
+                const next = text[i + 1];
+
+                if (char === '"') {
+                    if (inQuotes && next === '"') {
+                        value += '"';
+                        i += 1;
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                    continue;
+                }
+
+                if (char === "," && !inQuotes) {
+                    row.push(value);
+                    value = "";
+                    continue;
+                }
+
+                if ((char === "\n" || char === "\r") && !inQuotes) {
+                    if (char === "\r" && next === "\n") {
+                        i += 1;
+                    }
+                    row.push(value);
+                    value = "";
+                    if (row.length > 1 || row[0] !== "") {
+                        out.push(row);
+                    }
+                    row = [];
+                    continue;
+                }
+
+                value += char;
+            }
+
+            if (value.length > 0 || row.length > 0) {
+                row.push(value);
+                out.push(row);
+            }
+
+            return out;
+        }
+
+        function normalizeText(value) {
+            return (value || "").replace(/\s+/g, " ").trim().toLowerCase();
+        }
+
+        function makeRowObject(headers, values) {
+            const row = {};
+            headers.forEach((header, index) => {
+                row[header] = values[index] || "";
+            });
+            return row;
+        }
+
+        function optionCard(label, value, correctOption) {
+            const isCorrect = label === correctOption;
+            return `
+                <div class="option ${isCorrect ? "correct" : ""}">
+                    <span class="option-label">${label}</span>
+                    <span class="option-value">${escapeHtml(value)}</span>
+                </div>
+            `;
+        }
+
+        function escapeHtml(value) {
+            return (value || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        function renderCards(data) {
+            if (!data.length) {
+                results.innerHTML = "";
+                emptyState.hidden = false;
+                return;
+            }
+
+            emptyState.hidden = true;
+            results.innerHTML = data.map((row) => {
+                const correctOption = (row.correct_option || "").trim().toUpperCase();
+                return `
+                    <article class="mcq-container">
+                        <div class="mcq-head">
+                            <span class="chip">MCQ ID: ${escapeHtml(row.mcq_id || "")}</span>
+                            <span class="chip">Page: ${escapeHtml(row.page_number || "")}</span>
+                            <span class="chip">Language: ${escapeHtml(row.language || "")}</span>
+                            <span class="chip">Category: ${escapeHtml(row.category_name || "")}</span>
+                        </div>
+
+                        <div class="question-section">
+                            <div class="question-english">${escapeHtml(row.question_english || row.question || "")}</div>
+                            <div class="question-urdu">${escapeHtml(row.question_urdu || "")}</div>
+                            <div class="foot">${escapeHtml(row.mcq_url || "")}</div>
+                        </div>
+
+                        <div class="options-section">
+                            <div class="options-grid">
+                                ${optionCard("A", row.option_a || "", correctOption)}
+                                ${optionCard("B", row.option_b || "", correctOption)}
+                                ${optionCard("C", row.option_c || "", correctOption)}
+                                ${optionCard("D", row.option_d || "", correctOption)}
+                            </div>
+
+                            <div class="correct-option">
+                                <span class="field-name">Correct Option:</span>
+                                <span class="field-value">${escapeHtml(correctOption)}</span>
+                            </div>
+                        </div>
+                    </article>
+                `;
+            }).join("");
+        }
+
+        function applyFilter() {
+            const term = normalizeText(searchInput.value);
+            if (!term) {
+                renderCards(rows);
+                metaText.textContent = `${rows.length} rows loaded.`;
+                return;
+            }
+
+            const filtered = rows.filter((row) => {
+                return [
+                    row.mcq_url,
+                    row.question_english,
+                    row.question_urdu,
+                    row.option_a,
+                    row.option_b,
+                    row.option_c,
+                    row.option_d,
+                    row.correct_option
+                ].some((value) => normalizeText(value).includes(term));
+            });
+
+            renderCards(filtered);
+            metaText.textContent = `${filtered.length} of ${rows.length} rows matched "${searchInput.value}".`;
+        }
+
+        function loadCsv(text, fileName) {
+            const parsed = parseCsv(text.replace(/^\uFEFF/, ""));
+            if (!parsed.length) {
+                rows = [];
+                renderCards(rows);
+                metaText.textContent = "CSV file was empty.";
+                return;
+            }
+
+            const headers = parsed[0];
+            rows = parsed.slice(1).map((values) => makeRowObject(headers, values));
+            searchInput.value = "";
+            renderCards(rows);
+            metaText.textContent = `${fileName} loaded with ${rows.length} rows.`;
+        }
+
+        fileInput.addEventListener("change", async (event) => {
+            const file = event.target.files[0];
+            if (!file) {
+                return;
+            }
+
+            const text = await file.text();
+            loadCsv(text, file.name);
+        });
+
+        searchInput.addEventListener("input", applyFilter);
+    </script>
+</body>
+</html>

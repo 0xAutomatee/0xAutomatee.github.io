@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TestPoint CSV Viewer</title>
+    <style>
+        :root {
+            --bg: #f3f0e8;
+            --panel: #fffdf8;
+            --line: #d7cfc2;
+            --text: #1f1a14;
+            --muted: #6d6253;
+            --accent: #8d5b2b;
+            --accent-soft: #f5e4cf;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            background: linear-gradient(180deg, #efe7d8 0%, #f7f4ec 100%);
+            color: var(--text);
+        }
+
+        .wrap {
+            max-width: 100%;
+            padding: 20px;
+        }
+
+        .toolbar {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .title {
+            width: 100%;
+        }
+
+        .title h1 {
+            margin: 0 0 6px;
+            font-size: 24px;
+        }
+
+        .title p {
+            margin: 0;
+            color: var(--muted);
+        }
+
+        .file-label,
+        .search-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--accent-soft);
+            border: 1px solid #e6cfb0;
+            border-radius: 12px;
+            padding: 10px 14px;
+            color: var(--text);
+        }
+
+        .file-label input {
+            max-width: 220px;
+        }
+
+        .search-box input {
+            border: 0;
+            background: transparent;
+            outline: none;
+            min-width: 220px;
+            color: var(--text);
+        }
+
+        .meta {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .table-shell {
+            margin-top: 18px;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .table-scroll {
+            overflow: auto;
+            max-height: calc(100vh - 180px);
+        }
+
+        table {
+            width: max-content;
+            min-width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        thead th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background: #f8efe3;
+            color: #52371b;
+        }
+
+        th,
+        td {
+            border-bottom: 1px solid var(--line);
+            border-right: 1px solid #ebe2d6;
+            padding: 10px 12px;
+            text-align: left;
+            white-space: nowrap;
+            vertical-align: top;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #fffcf7;
+        }
+
+        tbody tr:hover {
+            background: #fff6ea;
+        }
+
+        .urdu {
+            direction: rtl;
+            text-align: right;
+            font-family: "Jameel Noori Nastaleeq", "Noto Nastaliq Urdu", "Urdu Typesetting", serif;
+            font-size: 18px;
+            line-height: 1.8;
+        }
+
+        .html-cell {
+            max-width: 420px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .empty {
+            padding: 32px 20px;
+            color: var(--muted);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="toolbar">
+            <div class="title">
+                <h1>TestPoint CSV Viewer</h1>
+                <p>Import a CSV file and read all MCQ columns in one wide row view.</p>
+            </div>
+
+            <label class="file-label">
+                <span>Choose CSV</span>
+                <input id="fileInput" type="file" accept=".csv">
+            </label>
+
+            <label class="search-box">
+                <span>Search</span>
+                <input id="searchInput" type="search" placeholder="Find text in any column">
+            </label>
+
+            <div class="meta" id="metaText">No CSV loaded.</div>
+        </div>
+
+        <div class="table-shell">
+            <div class="table-scroll" id="tableScroll">
+                <div class="empty" id="emptyState">Select a CSV file from this folder to view the extracted MCQs.</div>
+                <table id="csvTable" hidden>
+                    <thead id="tableHead"></thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById("fileInput");
+        const searchInput = document.getElementById("searchInput");
+        const metaText = document.getElementById("metaText");
+        const emptyState = document.getElementById("emptyState");
+        const csvTable = document.getElementById("csvTable");
+        const tableHead = document.getElementById("tableHead");
+        const tableBody = document.getElementById("tableBody");
+
+        let headers = [];
+        let rows = [];
+
+        function parseCsv(text) {
+            const out = [];
+            let row = [];
+            let value = "";
+            let inQuotes = false;
+
+            for (let i = 0; i < text.length; i += 1) {
+                const char = text[i];
+                const next = text[i + 1];
+
+                if (char === '"') {
+                    if (inQuotes && next === '"') {
+                        value += '"';
+                        i += 1;
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                    continue;
+                }
+
+                if (char === "," && !inQuotes) {
+                    row.push(value);
+                    value = "";
+                    continue;
+                }
+
+                if ((char === "\n" || char === "\r") && !inQuotes) {
+                    if (char === "\r" && next === "\n") {
+                        i += 1;
+                    }
+                    row.push(value);
+                    value = "";
+                    if (row.length > 1 || row[0] !== "") {
+                        out.push(row);
+                    }
+                    row = [];
+                    continue;
+                }
+
+                value += char;
+            }
+
+            if (value.length > 0 || row.length > 0) {
+                row.push(value);
+                out.push(row);
+            }
+
+            return out;
+        }
+
+        function isUrduColumn(header) {
+            return ["question_urdu", "question_urdu_cssURL"].includes(header);
+        }
+
+        function isHtmlColumn(header) {
+            return ["question_english_cssURL", "question_urdu_cssURL", "explanation_html"].includes(header);
+        }
+
+        function normalizeText(value) {
+            return (value || "").replace(/\s+/g, " ").trim().toLowerCase();
+        }
+
+        function renderTable(filteredRows) {
+            tableHead.innerHTML = "";
+            tableBody.innerHTML = "";
+
+            const headRow = document.createElement("tr");
+            headers.forEach((header) => {
+                const th = document.createElement("th");
+                th.textContent = header;
+                headRow.appendChild(th);
+            });
+            tableHead.appendChild(headRow);
+
+            filteredRows.forEach((rowObj) => {
+                const tr = document.createElement("tr");
+                headers.forEach((header) => {
+                    const td = document.createElement("td");
+                    const value = rowObj[header] || "";
+                    td.textContent = value;
+
+                    if (isUrduColumn(header)) {
+                        td.classList.add("urdu");
+                    }
+                    if (isHtmlColumn(header)) {
+                        td.classList.add("html-cell");
+                    }
+
+                    tr.appendChild(td);
+                });
+                tableBody.appendChild(tr);
+            });
+
+            emptyState.hidden = filteredRows.length > 0;
+            csvTable.hidden = filteredRows.length === 0;
+        }
+
+        function applyFilter() {
+            const term = normalizeText(searchInput.value);
+            if (!term) {
+                renderTable(rows);
+                metaText.textContent = `${rows.length} rows loaded.`;
+                return;
+            }
+
+            const filtered = rows.filter((row) =>
+                headers.some((header) => normalizeText(row[header]).includes(term))
+            );
+
+            renderTable(filtered);
+            metaText.textContent = `${filtered.length} of ${rows.length} rows matched "${searchInput.value}".`;
+        }
+
+        function loadCsvText(text, fileName) {
+            const parsed = parseCsv(text.replace(/^\uFEFF/, ""));
+            if (!parsed.length) {
+                headers = [];
+                rows = [];
+                renderTable([]);
+                metaText.textContent = "CSV file was empty.";
+                return;
+            }
+
+            headers = parsed[0];
+            rows = parsed.slice(1).map((values) => {
+                const rowObj = {};
+                headers.forEach((header, index) => {
+                    rowObj[header] = values[index] || "";
+                });
+                return rowObj;
+            });
+
+            searchInput.value = "";
+            renderTable(rows);
+            metaText.textContent = `${fileName} loaded with ${rows.length} rows.`;
+        }
+
+        fileInput.addEventListener("change", async (event) => {
+            const file = event.target.files[0];
+            if (!file) {
+                return;
+            }
+
+            const text = await file.text();
+            loadCsvText(text, file.name);
+        });
+
+        searchInput.addEventListener("input", applyFilter);
+    </script>
+</body>
+</html>
